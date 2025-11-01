@@ -1,0 +1,31 @@
+// place your custom styles here
+
+// 让 Hero 区域的图片在上，文字在下
+.vp-hero-info {
+  flex-direction: column !important;  // 改为垂直排列
+
+  // 图片样式
+  .vp-hero-image {
+    order: -1;  // 确保图片在最上面
+    margin: 2rem auto;  // 图片上下边距
+    max-height: 600px !important;  // 调整这个值来改变图片大小
+  }
+
+  // 文字内容样式
+  .vp-hero-infos {
+    order: 1;  // 文字在下面
+    text-align: center;  // 文字居中
+
+    // tagline 文字颜色改为黑色
+    #main-description {
+      color: #000 !important;  // 黑色
+      max-width: 800px !important;  // 调整宽度（默认是 35rem 约 560px）
+      margin: 1.8rem auto !important;  // 居中显示
+
+      // 深色模式下也保持黑色，或者改为白色
+      [data-theme="dark"] & {
+        color: #fff !important;  // 深色模式下用白色
+      }
+    }
+  }
+}

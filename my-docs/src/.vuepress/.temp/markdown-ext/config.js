@@ -1,0 +1,2 @@
+    import "D:/vuepress-theme-hope/project_of_zhizelab/my-docs/node_modules/.pnpm/@vuepress+plugin-markdown-e_83719ec7f4ee1af055aa35bf97624a91/node_modules/@vuepress/plugin-markdown-ext/lib/client/styles/footnote.css"
+    import "D:/vuepress-theme-hope/project_of_zhizelab/my-docs/node_modules/.pnpm/@vuepress+plugin-markdown-e_83719ec7f4ee1af055aa35bf97624a91/node_modules/@vuepress/plugin-markdown-ext/lib/client/styles/tasklist.css"

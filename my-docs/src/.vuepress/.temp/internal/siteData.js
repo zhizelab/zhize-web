@@ -1,0 +1,1 @@
+export const siteData = JSON.parse("{\"base\":\"/\",\"lang\":\"zh-CN\",\"title\":\"智泽实验室\",\"description\":\"⼈⼯智能+产业融合升级的⻅证者、实践者、推动者\",\"head\":[[\"link\",{\"rel\":\"icon\",\"href\":\"/images/zhizelab_logo_ss.png\"}]],\"locales\":{}}")
