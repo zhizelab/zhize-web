@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { ref, onBeforeUnmount, onMounted, computed, nextTick } from 'vue';
-import { initAuthSession, validateLogin } from "../utils/authSession";
+import { initAuthSession, validateLogin } from "../../utils/authSession";
 
 // SSR 安全：只有在 onMounted 后才动态导入 echarts
 let echarts: any = null;

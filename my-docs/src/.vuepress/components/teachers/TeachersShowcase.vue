@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { allTeachers } from "../data/teachers";
+import { allTeachers } from "../../data/teachers";
 const teachers = allTeachers;
 </script>
 

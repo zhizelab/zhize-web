@@ -98,9 +98,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { allMembers } from "../data/members";
+import { allMembers } from "../../data/members";
 
-import { authState, initAuthSession, isLoggedIn } from "../utils/authSession";
+import { authState, initAuthSession, isLoggedIn } from "../../utils/authSession";
 
 interface MemberItem {
   id: string;

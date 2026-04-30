@@ -1,21 +1,18 @@
 <template>
   <div class="teacher-profile">
-    <!-- 顶部封面 -->
+    <!-- 上半部分：图片 + 基本信息卡片 -->
     <section class="tp-hero">
-      <div class="tp-hero-bg">
-        <img v-if="teacher.photo" :src="teacher.photo" :alt="teacher.name" />
-        <div class="tp-hero-mask"></div>
-      </div>
-      <div class="tp-hero-content">
-        <div class="tp-hero-avatar">
-          <img :src="teacher.avatar" :alt="teacher.name" />
+      <div class="tp-hero-card">
+        <div class="tp-hero-photo">
+          <img :src="teacher.photo" :alt="teacher.name" />
         </div>
-        <div class="tp-hero-text">
+        <div class="tp-hero-info">
           <h1 class="tp-hero-name">{{ teacher.name }}</h1>
           <p class="tp-hero-title">{{ teacher.title }}</p>
           <p class="tp-hero-role">{{ teacher.role }}</p>
+          <p class="tp-hero-bio">{{ teacher.shortBio }}</p>
           <div class="tp-hero-areas">
-            <span v-for="area in teacher.researchAreas" :key="area" class="tp-area-pill">
+            <span v-for="area in teacher.researchAreas" :key="area" class="tp-area-tag">
               {{ area }}
             </span>
           </div>
@@ -25,7 +22,7 @@
 
     <!-- 主体内容 -->
     <div class="tp-layout">
-      <!-- 左侧/上方：核心信息 -->
+      <!-- 左侧：核心信息 -->
       <aside class="tp-sidebar">
         <div class="tp-sidebar-card">
           <h3>联系方式</h3>
@@ -56,7 +53,7 @@
         </div>
       </aside>
 
-      <!-- 右侧/下方：详细介绍 -->
+      <!-- 右侧：详细介绍 -->
       <main class="tp-main">
         <section class="tp-section">
           <h2>个人简介</h2>
@@ -101,6 +98,7 @@
           <h2>指导学生</h2>
           <p class="tp-students">{{ teacher.students }}</p>
         </section>
+
       </main>
     </div>
 
@@ -113,14 +111,13 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { Teacher } from "../data/teachers";
+import type { Teacher } from "../../data/teachers";
 
 const props = defineProps<{
   teacher: Teacher;
 }>();
 
 const formattedBio = computed(() => {
-  // 简单处理：将换行转为 <p> 标签
   return props.teacher.bio
     .split("\n")
     .filter((p) => p.trim())
@@ -130,112 +127,102 @@ const formattedBio = computed(() => {
 </script>
 
 <style scoped>
-/* ========== Hero 区域 ========== */
+/* ========== Hero 区域：左侧大图 + 右侧信息 ========== */
 .tp-hero {
-  position: relative;
-  min-height: 400px;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 50%, #fff0e6 100%);
+  padding: 40px 24px 0;
+  background: linear-gradient(135deg, #f8f5f2 0%, #f0ebe6 50%, #f5f2ee 100%);
 }
 
-.tp-hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.tp-hero-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  opacity: 0.25;
-}
-
-.tp-hero-mask {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,245,240,0.95) 100%);
-}
-
-.tp-hero-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: flex-end;
-  gap: 32px;
-  padding: 60px 40px 40px;
-  max-width: 1100px;
+.tp-hero-card {
+  max-width: 960px;
   margin: 0 auto;
-  width: 100%;
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
 }
 
-.tp-hero-avatar {
-  width: 160px;
-  height: 200px;
+.tp-hero-photo {
+  width: 280px;
+  height: 360px;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
   flex-shrink: 0;
-  background: #fff;
+  background: #eee;
 }
 
-.tp-hero-avatar img {
+.tp-hero-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center top;
 }
 
-.tp-hero-text {
+.tp-hero-info {
   flex: 1;
-  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
 }
 
 .tp-hero-name {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
   font-weight: 900;
   color: #1a1a1a;
-  margin: 0 0 6px;
+  margin: 0;
 }
 
 .tp-hero-title {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: #ff7e5f;
   font-weight: 700;
-  margin: 0 0 4px;
+  margin: 0;
 }
 
 .tp-hero-role {
   font-size: 0.95rem;
-  color: #777;
-  margin: 0 0 14px;
+  color: #888;
+  margin: 0;
+}
+
+.tp-hero-bio {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.7;
+  margin: 8px 0 0;
 }
 
 .tp-hero-areas {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 12px;
 }
 
-.tp-area-pill {
+.tp-area-tag {
   font-size: 0.82rem;
   color: #555;
   background: rgba(255, 126, 95, 0.1);
   border: 1px solid rgba(255, 126, 95, 0.2);
-  padding: 4px 14px;
+  padding: 5px 16px;
   border-radius: 20px;
 }
 
-@media (max-width: 640px) {
-  .tp-hero-content {
+@media (max-width: 768px) {
+  .tp-hero-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 40px 20px 30px;
-    gap: 20px;
+    gap: 24px;
+    padding: 24px;
+  }
+  .tp-hero-photo {
+    width: 200px;
+    height: 260px;
   }
   .tp-hero-areas {
     justify-content: center;
@@ -246,10 +233,10 @@ const formattedBio = computed(() => {
 .tp-layout {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 32px 24px 40px;
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 40px;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
 }
 
 @media (max-width: 900px) {
@@ -264,23 +251,23 @@ const formattedBio = computed(() => {
 .tp-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .tp-sidebar-card {
   background: #fff;
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
   border: 1px solid rgba(0,0,0,0.04);
 }
 
 .tp-sidebar-card h3 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #1a1a1a;
-  margin: 0 0 14px;
-  padding-bottom: 10px;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
   border-bottom: 2px solid #ff7e5f;
   display: inline-block;
 }
@@ -293,13 +280,13 @@ const formattedBio = computed(() => {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .tp-contact-list li,
 .tp-edu-list li,
 .tp-course-list li {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: #444;
   line-height: 1.5;
   display: flex;
@@ -317,32 +304,32 @@ const formattedBio = computed(() => {
 .tp-main {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 20px;
 }
 
 .tp-section {
   background: #fff;
   border-radius: 16px;
-  padding: 32px;
+  padding: 24px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
   border: 1px solid rgba(0,0,0,0.04);
 }
 
 .tp-section h2 {
-  font-size: 1.35rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: #1a1a1a;
-  margin: 0 0 18px;
-  padding-bottom: 10px;
+  margin: 0 0 14px;
+  padding-bottom: 8px;
   border-bottom: 2px solid #ff7e5f;
   display: inline-block;
 }
 
 .tp-bio :deep(p) {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #444;
-  line-height: 1.9;
-  margin: 0 0 14px;
+  line-height: 1.8;
+  margin: 0 0 12px;
 }
 
 .tp-bio :deep(p:last-child) {
@@ -357,15 +344,15 @@ const formattedBio = computed(() => {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .tp-achievement-list li,
 .tp-project-list li,
 .tp-award-list li {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #444;
-  line-height: 1.7;
+  line-height: 1.6;
   display: flex;
   gap: 10px;
   align-items: flex-start;
@@ -387,34 +374,67 @@ const formattedBio = computed(() => {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .tp-pub-list li {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #444;
-  line-height: 1.7;
+  line-height: 1.6;
   padding-left: 4px;
 }
 
 .tp-students {
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ========== Markdown 自定义内容插槽 ========== */
+.tp-slot-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.tp-slot-content :deep(h2) {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #ff7e5f;
+  display: inline-block;
+}
+
+.tp-slot-content :deep(p) {
+  font-size: 0.95rem;
   color: #444;
   line-height: 1.8;
-  margin: 0;
+  margin: 0 0 12px;
+}
+
+.tp-slot-content :deep(ul),
+.tp-slot-content :deep(ol) {
+  padding-left: 20px;
+  margin: 0 0 12px;
+}
+
+.tp-slot-content :deep(li) {
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.7;
+  margin-bottom: 6px;
 }
 
 /* ========== 返回按钮 ========== */
 .tp-back {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 40px 60px;
-}
-
-@media (max-width: 900px) {
-  .tp-back {
-    padding: 0 24px 40px;
-  }
+  padding: 0 24px 40px;
 }
 
 .tp-back-btn {

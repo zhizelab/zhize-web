@@ -178,7 +178,7 @@ import {
   getStatusTextByCode,
   type PostItem,
   type ReplyItem,
-} from "../utils/backendApi";
+} from "../../utils/backendApi";
 import {
   authState,
   initAuthSession,
@@ -187,7 +187,7 @@ import {
   logoutSession,
   refreshCurrentUser,
   validateLogin,
-} from "../utils/authSession";
+} from "../../utils/authSession";
 
 type ToolType = "" | "profile" | "posts";
 type PostViewType = "square" | "publish";

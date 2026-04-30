@@ -1,16 +1,16 @@
 import { onBeforeUnmount, onMounted } from "vue";
 import { defineClientConfig } from "vuepress/client";
 
-import LabHomePage from "./components/LabHomePage.vue";
-import TeamMembersPage from "./components/TeamMembersPage.vue";
-import GlobalGestureControl from "./components/GlobalGestureControl.vue";
-import GlobalAIAssistant from "./components/GlobalAIAssistant.vue";
-import VisitorDashboard from "./components/VisitorDashboard.vue";
-import TeachersShowcase from "./components/TeachersShowcase.vue";
-import TeacherProfile from "./components/TeacherProfile.vue";
-import TeacherProfileLoader from "./components/TeacherProfileLoader.vue";
-import GlobalUserAccess from "./components/GlobalUserAccess.vue";
-import GlobalMemberMarkdownSync from "./components/GlobalMemberMarkdownSync.vue";
+import LabHomePage from "./components/pages/LabHomePage.vue";
+import TeamMembersPage from "./components/pages/TeamMembersPage.vue";
+import GlobalGestureControl from "./components/global/GlobalGestureControl.vue";
+import GlobalAIAssistant from "./components/global/GlobalAIAssistant.vue";
+import VisitorDashboard from "./components/pages/VisitorDashboard.vue";
+import TeachersShowcase from "./components/teachers/TeachersShowcase.vue";
+import TeacherProfile from "./components/teachers/TeacherProfile.vue";
+import TeacherProfileLoader from "./components/teachers/TeacherProfileLoader.vue";
+import GlobalUserAccess from "./components/global/GlobalUserAccess.vue";
+import GlobalMemberMarkdownSync from "./components/global/GlobalMemberMarkdownSync.vue";
 
 export default defineClientConfig({
   rootComponents: [GlobalUserAccess, GlobalGestureControl, GlobalAIAssistant, GlobalMemberMarkdownSync],
