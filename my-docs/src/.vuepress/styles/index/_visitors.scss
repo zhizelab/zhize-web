@@ -1,0 +1,101 @@
+// 访问记录区域样式：统计卡片布局、数值样式与空态文案。
+// 作用范围：访问记录模块（.visit-stat-* / .visitor-list 等）。
+// 适用场景：调整访问统计卡片排列与数字视觉。
+
+// ========== 访问记录区域特殊样式 ==========
+.vp-highlight-item {
+  // 隐藏访问记录的图片
+  .vp-highlight-image,
+  .vp-feature-image {
+    display: none !important;
+  }
+
+  // ⭐ 让访问统计的两个卡片横向排列
+  .vp-highlights-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: stretch !important;
+    gap: 2rem !important;
+    flex-wrap: wrap !important;
+
+    // 每个统计卡片
+    .vp-highlight {
+      flex: 1 1 300px !important;  // 弹性布局，最小宽度 300px
+      max-width: 500px !important;  // 最大宽度限制
+      min-width: 250px !important;  // 最小宽度限制
+    }
+  }
+
+  // 访问统计数字样式 - 增大字体，缩小间距
+  .visit-stat-item {
+    text-align: center;
+    padding: 0.3rem !important;  // 再缩小一半内边距
+
+    .visit-number {
+      margin-bottom: 0.15rem !important;  // 再缩小一半间距
+
+      .stat-number {
+        font-size: clamp(2.2rem, 4.5vw, 3.2rem) !important;  // 增大数字字体
+        font-weight: 900;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+
+        [data-theme="dark"] & {
+          background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      }
+    }
+
+    .visit-label {
+      font-size: clamp(1.15rem, 2.2vw, 1.5rem) !important;  // 增大字体
+      font-weight: 600;
+      color: #4a5568;
+
+      [data-theme="dark"] & {
+        color: #cbd5e0;
+      }
+    }
+  }
+
+  // 访问者列表样式
+  .visitor-list {
+    padding: 2rem;
+
+    .visitor-placeholder {
+      text-align: center;
+      padding: 3rem 2rem;
+
+      .placeholder-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+
+      .placeholder-text {
+        font-size: clamp(1.3rem, 2.5vw, 1.8rem) !important;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+
+        [data-theme="dark"] & {
+          color: #e2e8f0;
+        }
+      }
+
+      .placeholder-desc {
+        font-size: clamp(1rem, 1.8vw, 1.2rem) !important;
+        color: #718096;
+
+        [data-theme="dark"] & {
+          color: #a0aec0;
+        }
+      }
+    }
+  }
+}

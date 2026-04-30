@@ -1,0 +1,413 @@
+.lab-home .section-main-dark {
+  position: relative;
+  background:
+    linear-gradient(130deg, rgba(7, 17, 36, 0.78) 0%, rgba(7, 17, 36, 0.58) 100%),
+    url("/images/main_img/dark-in-main.jpg") center / cover no-repeat;
+
+  .mode-header h2 {
+    color: #f6faff;
+  }
+
+  .mode-header a {
+    color: #d7e9ff;
+  }
+}
+
+.lab-home .mode-panel {
+  border: 1px solid var(--lab-border);
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 252, 255, 0.92) 100%);
+  box-shadow: 0 14px 34px rgba(28, 86, 173, 0.11);
+  backdrop-filter: blur(5px);
+  transition:
+    transform 0.24s ease,
+    border-color 0.24s ease,
+    box-shadow 0.24s ease;
+}
+
+.lab-home .mode-panel:hover {
+  transform: translateY(-4px);
+  border-color: rgba(117, 167, 228, 0.76);
+  box-shadow: 0 18px 40px rgba(17, 67, 146, 0.16);
+}
+
+.lab-home .panel-title {
+  margin: 0 0 0.95rem;
+  color: var(--lab-blue-900);
+  font-size: 1.06rem;
+  font-weight: 700;
+}
+
+.lab-home .mode.mode-about:nth-of-type(odd),
+.lab-home .mode.mode-about:nth-of-type(even) {
+  background:
+    linear-gradient(130deg, rgba(6, 18, 36, 0.82) 0%, rgba(6, 18, 36, 0.62) 100%),
+    url("/images/main_img/hhu-outside.jpg") center / cover no-repeat;
+}
+
+.lab-home .mode.mode-about::before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 36%),
+    radial-gradient(circle at 86% 14%, rgba(158, 211, 255, 0.22), rgba(158, 211, 255, 0) 44%);
+}
+
+.lab-home .mode-about .mode-header h2 {
+  color: #f4f9ff;
+}
+
+.lab-home .mode-about .mode-header a {
+  color: #d6ebff;
+}
+
+.lab-home .mode-about .mode-panel {
+  border-color: rgba(183, 215, 246, 0.48);
+  background: linear-gradient(155deg, rgba(8, 27, 51, 0.78) 0%, rgba(8, 27, 51, 0.62) 100%);
+  box-shadow: 0 14px 34px rgba(4, 16, 34, 0.4);
+}
+
+.lab-home .mode-about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(280px, 0.9fr);
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+.lab-home .intro-text {
+  padding: 1.45rem 1.6rem;
+
+  .intro-lead {
+    margin: 0 0 0.85rem;
+    color: #f4f9ff;
+    font-size: 1.06rem;
+    font-weight: 650;
+    line-height: 1.88;
+  }
+
+  p {
+    margin: 0 0 0.9rem;
+    line-height: 1.84;
+    color: rgba(229, 240, 253, 0.96);
+    font-size: 0.99rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.lab-home .about-points {
+  margin: 0;
+  padding: 0.15rem 0 0 1.15rem;
+  display: grid;
+  gap: 0.5rem;
+
+  li {
+    color: rgba(214, 232, 251, 0.95);
+    line-height: 1.65;
+    font-size: 0.92rem;
+  }
+}
+
+.lab-home .about-visual {
+  padding: 0.86rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.68rem;
+}
+
+.lab-home .about-figure {
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(182, 218, 250, 0.46);
+  background: rgba(9, 26, 49, 0.66);
+
+  img {
+    display: block;
+    width: 100%;
+    min-height: 272px;
+    max-height: 360px;
+    object-fit: cover;
+  }
+
+  figcaption {
+    margin: 0;
+    padding: 0.56rem 0.7rem 0.62rem;
+    color: rgba(221, 238, 255, 0.94);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    background: linear-gradient(180deg, rgba(8, 24, 46, 0.1) 0%, rgba(8, 24, 46, 0.68) 100%);
+  }
+}
+
+.lab-home .about-caption {
+  margin: 0;
+  color: rgba(219, 236, 255, 0.96);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.lab-home .metric-panel {
+  padding: 1.2rem 1.15rem;
+}
+
+.lab-home .metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.72rem;
+}
+
+.lab-home .metric-card {
+  border-radius: 14px;
+  border: 1px solid rgba(167, 200, 243, 0.66);
+  background: rgba(232, 243, 255, 0.74);
+  padding: 0.95rem 0.85rem;
+}
+
+.lab-home .metric-value {
+  margin: 0;
+  color: var(--lab-blue-700);
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.lab-home .metric-label {
+  margin: 0.35rem 0 0;
+  color: var(--lab-muted);
+  font-size: 0.9rem;
+}
+
+.lab-home .research-activity-layout {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 1rem;
+}
+
+.lab-home .research-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.86rem;
+}
+
+.lab-home .research-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 223, 248, 0.82);
+  text-decoration: none;
+  background: rgba(7, 22, 44, 0.72);
+  box-shadow: 0 10px 22px rgba(12, 45, 99, 0.3);
+  transition: transform 0.24s ease, box-shadow 0.24s ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    opacity: 0.92;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(12, 45, 99, 0.38);
+  }
+}
+
+.lab-home .research-tag {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.56rem;
+  border-radius: 999px;
+  border: 1px solid rgba(182, 220, 255, 0.42);
+  background: rgba(6, 19, 38, 0.6);
+  color: #d3e9ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.lab-home .research-title {
+  position: absolute;
+  left: 0.8rem;
+  right: 0.8rem;
+  bottom: 2.9rem;
+  color: #f4f9ff;
+  font-size: 1rem;
+  font-weight: 760;
+}
+
+.lab-home .research-desc {
+  position: absolute;
+  left: 0.8rem;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  margin: 0;
+  color: rgba(228, 241, 255, 0.9);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.lab-home .activity-timeline {
+  padding: 1rem 1rem 0.8rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 248, 255, 0.95) 100%);
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    position: relative;
+    padding: 0.2rem 0 0.95rem 1rem;
+    border-left: 1px dashed rgba(126, 171, 226, 0.7);
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: -4px;
+      top: 0.3rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2a86f6;
+      box-shadow: 0 0 0 4px rgba(42, 134, 246, 0.13);
+    }
+  }
+
+  li:last-child {
+    padding-bottom: 0.2rem;
+    border-left-color: transparent;
+  }
+
+  .activity-date {
+    margin: 0;
+    color: var(--lab-blue-700);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  h4 {
+    margin: 0.32rem 0 0.26rem;
+    color: var(--lab-blue-900);
+    font-size: 0.96rem;
+    line-height: 1.45;
+  }
+
+  .activity-place {
+    margin: 0;
+    color: var(--lab-muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  a {
+    display: inline-flex;
+    margin-top: 0.42rem;
+    color: var(--lab-blue-700);
+    font-size: 0.82rem;
+    font-weight: 650;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.lab-home .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.86rem;
+}
+
+.lab-home .gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(196, 219, 245, 0.8);
+  text-decoration: none;
+  box-shadow: 0 10px 22px rgba(20, 72, 150, 0.12);
+  transition: transform 0.24s ease, box-shadow 0.24s ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.56rem 0.7rem;
+    background: linear-gradient(180deg, rgba(8, 19, 41, 0), rgba(8, 19, 41, 0.78));
+    color: #f3f9ff;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(20, 72, 150, 0.2);
+  }
+}
+
+.lab-home .lab-footer {
+  margin-top: 1rem;
+  padding: 2rem 8vw 2.3rem;
+  border-top: 1px solid var(--lab-border);
+  background: linear-gradient(180deg, rgba(235, 244, 255, 0.92) 0%, rgba(226, 237, 252, 0.98) 100%);
+}
+
+.lab-home .footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+
+  img {
+    width: 42px;
+    height: 42px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--lab-blue-900);
+    font-size: 1.06rem;
+    font-weight: 700;
+  }
+}
+
+.lab-home .footer-links {
+  margin-top: 0.95rem;
+  display: flex;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+
+  a {
+    color: var(--lab-blue-700);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.lab-home .footer-contact {
+  margin-top: 0.9rem;
+
+  p {
+    margin: 0.24rem 0;
+    color: var(--lab-muted);
+    font-size: 0.9rem;
+  }
+}

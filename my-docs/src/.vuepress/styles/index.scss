@@ -1,0 +1,15 @@
+// ========== 极简高性能静态页面设计 ==========
+// 无复杂动画，快速加载，现代美观
+
+// place your custom styles here
+
+// ========== 引入各个部分样式 ==========
+@use "./index/base";
+@use "./index/hero";
+@use "./index/features";
+@use "./index/responsive";
+@use "./index/portfolio";
+@use "./index/visitors";
+@use "./index/backgrounds";
+@use "./index/team-members";
+// @use "./index/scroll-snap"; // 全屏滚动布局（默认不启用，见该文件内注释）

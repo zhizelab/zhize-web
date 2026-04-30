@@ -1,0 +1,188 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover' />
+    <meta charset='utf-8'>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        #ply-pagination {
+            position: fixed; bottom: 24px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; align-items: center; gap: 14px;
+            background: rgba(10,18,22,0.78);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.13); border-radius: 48px;
+            padding: 10px 22px; z-index: 9999; color: #fff;
+            font-family: Helvetica, arial, sans-serif; user-select: none;
+            box-shadow: 0 4px 28px rgba(0,0,0,0.55); pointer-events: all;
+        }
+        .ply-nav-btn {
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.1); color: #fff; font-size: 17px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background .18s, border-color .18s; flex-shrink: 0;
+        }
+        .ply-nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
+        .ply-nav-btn:disabled { opacity: .25; cursor: not-allowed; }
+        #ply-page-info { text-align: center; min-width: 118px; }
+        #ply-page-name { display: block; font-size: 13px; font-weight: 600; letter-spacing: .4px; white-space: nowrap; }
+        #ply-dots { display: flex; gap: 6px; justify-content: center; margin-top: 5px; }
+        .ply-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); transition: background .2s, transform .2s; }
+        .ply-dot.active { background: #fff; transform: scale(1.35); }
+        #ply-loading {
+            display: none; position: fixed; inset: 0;
+            background: rgba(29,41,44,.88); z-index: 9998;
+            align-items: center; justify-content: center; flex-direction: column;
+            gap: 14px; color: #fff; font-family: Helvetica, arial, sans-serif; font-size: 14px;
+        }
+        #ply-loading.visible { display: flex; }
+        .ply-spinner {
+            width: 36px; height: 36px;
+            border: 3px solid rgba(255,255,255,.15); border-top-color: #fff;
+            border-radius: 50%; animation: ply-spin .7s linear infinite;
+        }
+        @keyframes ply-spin { to { transform: rotate(360deg); } }
+    </style>
+    <title>zz_lab2</title>
+    <script type="importmap">{ "imports": {} }</script>
+
+    <!-- PLY Pagination: XHR intercept must run BEFORE index.mjs -->
+    <script>
+    (function () {
+        window._PLY_PAGES = [
+            { name: 'Splat',        gsplatAssetId: 277976552, assetUrl: 'files/point_cloud-playground.ply ',        enabledEntity: 'splat',       disabledEntity: 'point_cloud' },
+            { name: 'Point Cloud',  gsplatAssetId: 271806273, assetUrl: 'files/point_cloud.ply',                      enabledEntity: 'point_cloud', disabledEntity: 'splat' },
+            { name: 'Playground',   gsplatAssetId: 271806273, assetUrl: 'files/assets/277976552/1/splat.ply',           enabledEntity: 'point_cloud', disabledEntity: 'splat' }
+        ];
+        var total = window._PLY_PAGES.length;
+        var h = parseInt(location.hash.replace('#',''), 10);
+        window._PLY_CURRENT = isNaN(h) ? 0 : Math.min(Math.max(h, 0), total - 1);
+
+        function modifyConfig(cfg, page) {
+            Object.keys(cfg.assets || {}).forEach(function(id) {
+                var a = cfg.assets[id];
+                if (a.type !== 'gsplat') return;
+                if (parseInt(id,10) === page.gsplatAssetId) {
+                    a.preload = true;
+                    if (a.file) { a.file.url = page.assetUrl; a.file.filename = page.assetUrl.split('/').pop(); }
+                } else {
+                    a.preload = false;
+                }
+            });
+        }
+        function modifyScene(scene, page) {
+            Object.keys(scene.entities || {}).forEach(function(id) {
+                var ent = scene.entities[id];
+                if (!ent.components || !ent.components.gsplat) return;
+                if (ent.name === page.enabledEntity) {
+                    ent.enabled = true;
+                    ent.components.gsplat.asset = page.gsplatAssetId;
+                } else if (ent.name === page.disabledEntity) {
+                    ent.enabled = false;
+                }
+            });
+        }
+
+        /*
+         * PlayCanvas uses XMLHttpRequest exclusively.
+         * open() -> set onreadystatechange -> send()
+         * We intercept send(): wrap the already-assigned onreadystatechange,
+         * then just before the original handler runs we override xhr.response
+         * and xhr.responseText on the instance with our patched JSON.
+         */
+        var _origOpen = XMLHttpRequest.prototype.open;
+        var _origSend = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.open = function() {
+            this._plyUrl = String(arguments[1] || '');
+            return _origOpen.apply(this, arguments);
+        };
+
+        XMLHttpRequest.prototype.send = function(body) {
+            var url  = this._plyUrl || '';
+            var page = window._PLY_PAGES[window._PLY_CURRENT];
+            var isConfig = page && url.indexOf('config.json') !== -1;
+            var isScene  = page && url.indexOf('2408306.json') !== -1;
+
+            if (isConfig || isScene) {
+                var origOnRS = this.onreadystatechange;
+                var xhr = this;
+                this.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        try {
+                            var parsed = xhr.response;
+                            if (typeof parsed === 'string') { try { parsed = JSON.parse(parsed); } catch(e){} }
+                            else if (!parsed || typeof parsed !== 'object') { try { parsed = JSON.parse(xhr.responseText); } catch(e){} }
+                            if (parsed && typeof parsed === 'object') {
+                                if (isConfig) modifyConfig(parsed, page);
+                                if (isScene)  modifyScene(parsed, page);
+                                var txt = JSON.stringify(parsed);
+                                try { Object.defineProperty(xhr,'response',    {value:parsed, configurable:true, writable:true}); } catch(e){}
+                                try { Object.defineProperty(xhr,'responseText', {value:txt,    configurable:true, writable:true}); } catch(e){}
+                            }
+                        } catch(err) { console.warn('[PLY Pager] XHR error:', err); }
+                    }
+                    if (origOnRS) origOnRS.apply(this, arguments);
+                };
+            }
+            return _origSend.apply(this, arguments);
+        };
+    })();
+    </script>
+</head>
+<body>
+    <script type='module' src="js/index.mjs"></script>
+
+    <div id="ply-loading">
+        <div class="ply-spinner"></div>
+        <span id="ply-loading-text">正在加载…</span>
+    </div>
+
+    <div id="ply-pagination">
+        <button class="ply-nav-btn" id="ply-prev" title="上一个">&#8592;</button>
+        <div id="ply-page-info">
+            <span id="ply-page-name"></span>
+            <div id="ply-dots"></div>
+        </div>
+        <button class="ply-nav-btn" id="ply-next" title="下一个">&#8594;</button>
+    </div>
+
+    <script>
+    (function () {
+        var pages = window._PLY_PAGES || [];
+        var total = pages.length;
+        var curr  = window._PLY_CURRENT || 0;
+
+        var dotsEl = document.getElementById('ply-dots');
+        pages.forEach(function(_, i) {
+            var dot = document.createElement('span');
+            dot.className = 'ply-dot' + (i === curr ? ' active' : '');
+            dotsEl.appendChild(dot);
+        });
+
+        document.getElementById('ply-page-name').textContent = pages[curr] ? pages[curr].name : '';
+        var prevBtn = document.getElementById('ply-prev');
+        var nextBtn = document.getElementById('ply-next');
+        prevBtn.disabled = (curr === 0);
+        nextBtn.disabled = (curr === total - 1);
+
+        function navigateTo(index) {
+            if (index < 0 || index >= total) return;
+            document.getElementById('ply-loading-text').textContent = '正在加载 ' + pages[index].name + '…';
+            document.getElementById('ply-loading').classList.add('visible');
+            location.hash = '#' + index;
+            location.reload();
+        }
+
+        prevBtn.addEventListener('click', function() { navigateTo(curr - 1); });
+        nextBtn.addEventListener('click', function() { navigateTo(curr + 1); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft')  navigateTo(curr - 1);
+            if (e.key === 'ArrowRight') navigateTo(curr + 1);
+        });
+    })();
+    </script>
+</body>
+</html>

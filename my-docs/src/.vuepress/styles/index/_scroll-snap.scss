@@ -1,0 +1,26 @@
+// 全屏滚动布局 (Full-Page Scrolling)：参考用法，默认不启用。
+// 作用范围：首页容器（.vp-project-home）及页面整体滚动行为。
+// 启用方式：在 index.scss 中取消注释 @use "./index/scroll-snap"。
+// 注意事项：启用后鼠标滚轮会被 scroll-snap 限制，请按需使用。
+
+html {
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+body {
+  height: 100%;
+  overflow-y: auto;
+}
+
+// 主页容器启用全屏滚动
+.vp-project-home {
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+  height: 100vh;
+
+  // 优化滚动性能
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}

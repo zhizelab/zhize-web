@@ -1,0 +1,118 @@
+:root {
+  --lab-blue-900: #12315e;
+  --lab-blue-700: #1f68d8;
+  --lab-blue-500: #4797ff;
+  --lab-blue-100: #edf5ff;
+  --lab-bg-page: #f3f6fc;
+  --lab-bg-soft: #f7faff;
+  --lab-card: #ffffff;
+  --lab-border: #c9d9ee;
+  --lab-text: #0f213f;
+  --lab-muted: #4f688f;
+}
+
+body:has(.lab-home) .vp-page-title,
+body:has(.lab-home) .vp-breadcrumb,
+body:has(.lab-home) .vp-page-meta {
+  display: none !important;
+}
+
+body:has(.lab-home) .vp-project-home .vp-hero-info-wrapper {
+  display: none !important;
+}
+
+body:has(.lab-home) [vp-content],
+body:has(.lab-home) #markdown-content,
+body:has(.lab-home) .theme-default-content {
+  width: 100%;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent;
+}
+
+.lab-home {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  color: var(--lab-text);
+  background: linear-gradient(180deg, #ffffff 0%, #f7faff 42%, #eff4fb 100%);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.lab-home::before,
+.lab-home::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.lab-home::before {
+  width: 520px;
+  height: 520px;
+  top: 16%;
+  left: -260px;
+  background: radial-gradient(circle at center, rgba(110, 179, 255, 0.18) 0%, rgba(110, 179, 255, 0) 70%);
+}
+
+.lab-home::after {
+  width: 560px;
+  height: 560px;
+  right: -280px;
+  bottom: 8%;
+  background: radial-gradient(circle at center, rgba(157, 215, 255, 0.2) 0%, rgba(157, 215, 255, 0) 70%);
+}
+
+.lab-home .mode,
+.lab-home .lab-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.lab-home .mode:not(.section-main-dark):not(.mode-about):not(.mode-gallery):nth-of-type(odd) {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(243, 248, 255, 0.9) 100%);
+}
+
+.lab-home .mode:not(.section-main-dark):not(.mode-about):not(.mode-gallery):nth-of-type(even) {
+  background: linear-gradient(180deg, rgba(243, 249, 255, 0.88) 0%, rgba(255, 255, 255, 0.94) 100%);
+}
+
+.lab-home .mode:not(.section-main-dark):not(.mode-about):not(.mode-gallery)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0)),
+    radial-gradient(circle at 8% 18%, rgba(161, 209, 255, 0.14), rgba(161, 209, 255, 0) 42%);
+  z-index: -1;
+}
+
+.lab-home .mode.mode-gallery {
+  background:
+    linear-gradient(135deg, rgba(6, 20, 40, 0.8) 0%, rgba(6, 20, 40, 0.58) 100%),
+    url("/images/main_img/hhu-water.jpg") center / cover no-repeat;
+}
+
+.lab-home .mode.mode-gallery::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 30%),
+    radial-gradient(circle at 78% 20%, rgba(146, 205, 255, 0.18), rgba(146, 205, 255, 0) 44%);
+  z-index: -1;
+}
+
+.lab-home .mode-gallery .mode-header h2 {
+  color: #f4f9ff;
+}
+
+.lab-home .mode-gallery .mode-header a {
+  color: #d7ebff;
+}

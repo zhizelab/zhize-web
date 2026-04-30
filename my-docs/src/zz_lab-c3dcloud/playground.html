@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover' />
+    <meta charset='utf-8'>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <title>Playground – zz_lab</title>
+    <script type="importmap">{ "imports": {} }</script>
+    <script>
+    /* Patch XHR so PlayCanvas loads: files/point_cloud-playground.ply */
+    (function () {
+        var TARGET_ASSET_ID = 271806273;
+        var TARGET_URL      = 'files/point_cloud-playground.ply';
+        var ENABLED_ENTITY  = 'point_cloud';
+        var DISABLED_ENTITY = 'splat';
+
+        function patchConfig(cfg) {
+            Object.keys(cfg.assets || {}).forEach(function (id) {
+                var a = cfg.assets[id];
+                if (a.type !== 'gsplat') return;
+                if (parseInt(id, 10) === TARGET_ASSET_ID) {
+                    a.preload = true;
+                    if (a.file) { a.file.url = TARGET_URL; a.file.filename = TARGET_URL.split('/').pop(); }
+                } else {
+                    a.preload = false;
+                }
+            });
+        }
+        function patchScene(scene) {
+            Object.keys(scene.entities || {}).forEach(function (id) {
+                var e = scene.entities[id];
+                if (!e.components || !e.components.gsplat) return;
+                if (e.name === ENABLED_ENTITY)  { e.enabled = true;  e.components.gsplat.asset = TARGET_ASSET_ID; }
+                if (e.name === DISABLED_ENTITY) { e.enabled = false; }
+            });
+        }
+
+        var _open = XMLHttpRequest.prototype.open;
+        var _send = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.open = function () {
+            this._plyUrl = String(arguments[1] || '');
+            return _open.apply(this, arguments);
+        };
+        XMLHttpRequest.prototype.send = function (body) {
+            var url = this._plyUrl || '';
+            var isCfg   = url.indexOf('config.json')  !== -1;
+            var isScene = url.indexOf('2408306.json')  !== -1;
+            if (isCfg || isScene) {
+                var orig = this.onreadystatechange, xhr = this;
+                this.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        try {
+                            var p = xhr.response;
+                            if (typeof p === 'string') p = JSON.parse(p);
+                            else if (!p || typeof p !== 'object') p = JSON.parse(xhr.responseText);
+                            if (p && typeof p === 'object') {
+                                if (isCfg)   patchConfig(p);
+                                if (isScene) patchScene(p);
+                                var t = JSON.stringify(p);
+                                try { Object.defineProperty(xhr, 'response',     {value: p, configurable: true, writable: true}); } catch(e){}
+                                try { Object.defineProperty(xhr, 'responseText', {value: t, configurable: true, writable: true}); } catch(e){}
+                            }
+                        } catch(err) { console.warn('[XHR patch]', err); }
+                    }
+                    if (orig) orig.apply(this, arguments);
+                };
+            }
+            return _send.apply(this, arguments);
+        };
+    })();
+    </script>
+</head>
+<body>
+    <script type='module' src="js/index.mjs"></script>
+</body>
+</html>

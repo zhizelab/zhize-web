@@ -1,0 +1,95 @@
+// Portfolio 页面样式：教师展示与详情页样式。
+
+// ========== 旧版 Portfolio 兼容样式 ==========
+.vp-portfolio-info {
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem) !important;
+    font-weight: 900 !important;
+  }
+  .vp-portfolio-name {
+    font-size: clamp(2rem, 5vw, 3.5rem) !important;
+    font-weight: 800 !important;
+  }
+  .vp-portfolio-titles li {
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem) !important;
+    font-weight: 500 !important;
+  }
+  .vp-portfolio-avatar {
+    max-width: 300px !important;
+    max-height: 300px !important;
+    margin: 2rem auto;
+  }
+}
+
+// ========== 师资队伍页：强制全宽、去padding、隐藏所有头部元素 ==========
+.teachers-portfolio-page {
+  // 页面容器本身去padding
+  &.page,
+  .page {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  // 内容区去限制
+  .theme-hope-content,
+  .vp-page,
+  .page-content,
+  .content {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  // 隐藏面包屑（所有可能的选择器）
+  .vp-breadcrumb,
+  .breadcrumb,
+  nav[class*="breadcrumb"],
+  [class*="breadcrumb"] {
+    display: none !important;
+  }
+
+  // 隐藏页面标题
+  .vp-page-title,
+  .page-title,
+  h1[class*="page-title"],
+  h1:first-of-type {
+    display: none !important;
+  }
+
+  // 隐藏作者、时间等元信息
+  .vp-page-meta,
+  .page-meta,
+  [class*="page-meta"],
+  [class*="meta-wrapper"] {
+    display: none !important;
+  }
+
+  // 隐藏可能存在的分割线
+  .vp-page-title + hr,
+  .page-title + hr,
+  .vp-hr,
+  hr {
+    display: none !important;
+  }
+}
+
+// 全局确保 teachers-showcase 不受外层容器限制
+.teachers-showcase {
+  background: transparent;
+}
+
+// 详情页也去掉多余的padding
+.teacher-profile-page {
+  &.page,
+  .page {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .theme-hope-content,
+  .vp-page {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}

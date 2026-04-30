@@ -1,0 +1,6 @@
+my-docs/node_modules/
+my-docs/src/.vuepress/dist/
+my-docs/src/.vuepress/.temp/
+my-docs/src/.vuepress/.cache/
+my-docs/.DS_Store
+my-docs/Thumbs.db

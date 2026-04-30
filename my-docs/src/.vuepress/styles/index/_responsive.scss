@@ -1,0 +1,164 @@
+@media (max-width: 1180px) {
+  .lab-home .mode,
+  .lab-home .lab-footer {
+    padding-left: 6vw;
+    padding-right: 6vw;
+  }
+}
+
+@media (max-width: 980px) {
+  .lab-home .mode-about-layout,
+  .lab-home .research-activity-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-home .about-visual {
+    padding: 0.78rem;
+  }
+
+  .lab-home .about-figure img {
+    min-height: 240px;
+    max-height: 320px;
+  }
+
+  .lab-home .research-grid,
+  .lab-home .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lab-home .hero-explore-hub {
+    bottom: clamp(0.66rem, 2.4vh, 1.1rem);
+    width: clamp(78px, 9.5vw, 94px);
+    height: clamp(100px, 11.8vw, 116px);
+  }
+}
+
+@media (max-width: 760px) {
+  .lab-home .title-box {
+    padding: 7.4rem 1.2rem 2.2rem;
+  }
+
+  .lab-home .hero-logo {
+    width: clamp(200px, 63vw, 320px);
+    margin-bottom: 0.9rem;
+  }
+
+  .lab-home .hero-title {
+    font-size: clamp(1.72rem, 8.4vw, 2.8rem);
+    letter-spacing: 0.03em;
+  }
+
+  .lab-home .hero-chip-list {
+    gap: 0.62rem;
+
+    span {
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+    }
+
+    span::before {
+      width: 0.3rem;
+      height: 0.3rem;
+    }
+  }
+
+  .lab-home .intro-text {
+    padding: 1.15rem 1.18rem;
+
+    .intro-lead {
+      font-size: 0.96rem;
+      line-height: 1.76;
+    }
+
+    p {
+      font-size: 0.9rem;
+      line-height: 1.74;
+    }
+  }
+
+  .lab-home .about-points {
+    padding-left: 1rem;
+
+    li {
+      font-size: 0.86rem;
+      line-height: 1.58;
+    }
+  }
+
+  .lab-home .about-caption {
+    font-size: 0.84rem;
+    line-height: 1.6;
+  }
+
+  .lab-home .hero-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .lab-home .hero-main-action,
+  .lab-home .hero-sub-action {
+    min-width: 112px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.84rem;
+  }
+
+  .lab-home .hero-explore-hub {
+    width: clamp(72px, 18vw, 86px);
+    height: clamp(92px, 22.5vw, 106px);
+    bottom: 0.5rem;
+  }
+
+  .lab-home .explore-body {
+    font-size: 0.76rem;
+  }
+
+  .lab-home .mode {
+    padding-top: 2.8rem;
+    padding-bottom: 2.8rem;
+  }
+
+  .lab-home .mode-header {
+    align-items: center;
+
+    h2 {
+      font-size: 1.45rem;
+    }
+  }
+
+  .lab-home .gesture-control {
+    right: 0.65rem;
+    left: 0.65rem;
+    width: auto;
+    top: auto;
+    bottom: 0.64rem;
+    padding: 0.64rem 0.66rem;
+  }
+
+  .lab-home .gesture-status,
+  .lab-home .gesture-tips {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .lab-home .research-grid,
+  .lab-home .gallery-grid,
+  .lab-home .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-home .hero-explore-hub {
+    width: 64px;
+    height: 80px;
+    bottom: 0.44rem;
+  }
+
+  .lab-home .about-figure img {
+    min-height: 210px;
+    max-height: 260px;
+  }
+
+  .lab-home .explore-body {
+    font-size: 0.68rem;
+  }
+}
