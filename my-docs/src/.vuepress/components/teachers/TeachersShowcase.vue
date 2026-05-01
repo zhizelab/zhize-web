@@ -111,16 +111,15 @@ const teachers = allTeachers;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0 12px;
+  padding: 0 8px;
   overflow: visible;
-  margin: 0 20px;
+  margin: 0 8px;
   border-radius: 16px 16px 0 0;
 }
 
 .ts-card-photo-wrap {
   position: relative;
   width: 100%;
-  max-width: 170px;
   height: 95%;
   margin-bottom: -10px;
   z-index: 2;

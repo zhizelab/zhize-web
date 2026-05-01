@@ -9,6 +9,8 @@ import VisitorDashboard from "./components/pages/VisitorDashboard.vue";
 import TeachersShowcase from "./components/teachers/TeachersShowcase.vue";
 import TeacherProfile from "./components/teachers/TeacherProfile.vue";
 import TeacherProfileLoader from "./components/teachers/TeacherProfileLoader.vue";
+import MemberProfile from "./components/members/MemberProfile.vue";
+import MemberProfileLoader from "./components/members/MemberProfileLoader.vue";
 import GlobalUserAccess from "./components/global/GlobalUserAccess.vue";
 import GlobalMemberMarkdownSync from "./components/global/GlobalMemberMarkdownSync.vue";
 
@@ -22,6 +24,8 @@ export default defineClientConfig({
     app.component("TeachersShowcase", TeachersShowcase);
     app.component("TeacherProfile", TeacherProfile);
     app.component("TeacherProfileLoader", TeacherProfileLoader);
+    app.component("MemberProfile", MemberProfile);
+    app.component("MemberProfileLoader", MemberProfileLoader);
   },
 
   setup() {

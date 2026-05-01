@@ -1,22 +1,33 @@
 ---
+layout: false
+navbar: true
+sidebar: false
+footer: false
+title: 刘鸿宇 - 研究队伍
+pageClass: member-profile-page
+id: liuhongyu
 name: 刘鸿宇
+avatar: /images/team-member/liuhongyu.png
+photo: /images/team-member/liuhongyu.png
 grade: 24级
 major: 大数据管理与应用
-title: 超级大神啊
-desc: 其实未必诗人
-badge: /images/team-member/liuhongyu.png 
+role: 新成员
+shortBio: 对数据挖掘与机器学习有浓厚兴趣，正在积极探索科研方向。
+researchAreas:
+  - 数据挖掘
+  - 机器学习
+email: liuhongyu@example.com
+skills:
+  - Python
+  - SQL
+  - Pandas
+projects:
+  - 学生成绩分析系统
+awards: []
+bio: |
+  刘鸿宇同学是实验室的新成员，2024年加入团队。
+  对大数据分析与机器学习有浓厚兴趣，正在积极学习相关技术并寻找合适的科研方向。
+  希望在实验室的学习和实践中快速成长，为团队贡献自己的力量。
 ---
 
-# 张三
-
-## 个人简介
-这里是张三的个人详细介绍。主要研究方向为人工智能、大语言模型等。
-
-## 研究方向
-- 深度学习
-- 计算机视觉
-- 强化学习
-
-## 联系方式
-- 邮箱: zhangsan@example.com
-- Github: [zhangsan](https://github.com)
+<MemberProfileLoader />

@@ -10,8 +10,8 @@ id: guyang
 name: 顾杨
 rank: 副教授
 role: 竞赛指导老师
-avatar: /images/portfolio_img/teacher_temp.png
-photo: /images/portfolio_img/teacher_temp.png
+avatar: /images/teacher-photo/guyang-removebg.png
+photo: /images/teacher-photo/guyang-removebg.png
 shortBio: 研究方向简介
 researchAreas:
   - 研究方向1

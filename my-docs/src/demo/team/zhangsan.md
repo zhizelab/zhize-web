@@ -1,22 +1,38 @@
 ---
+layout: false
+navbar: true
+sidebar: false
+footer: false
+title: 张三 - 研究队伍
+pageClass: member-profile-page
+id: zhangsan
 name: 张三
+avatar: /images/main_img/hhu-bridge.png
+photo: /images/main_img/hhu-bridge.png
 grade: 21级
 major: 人工智能
-title: 信息待更新
-desc: 个人简介、研究方向与联系方式待补充。
-badge: /images/main_img/hhu-bridge.png 
+role: 核心成员
+shortBio: 专注于深度学习与计算机视觉研究，多次在国家级竞赛中获奖。
+researchAreas:
+  - 深度学习
+  - 计算机视觉
+  - 强化学习
+email: zhangsan@example.com
+skills:
+  - Python
+  - PyTorch
+  - OpenCV
+  - TensorFlow
+projects:
+  - 智慧水利监测平台
+  - 机器人视觉导航系统
+awards:
+  - 全国大学生电子设计竞赛一等奖
+  - 全国大学生数学建模竞赛省级一等奖
+bio: |
+  张三同学是实验室的核心成员之一，自2021年加入以来积极参与各类科研项目与竞赛。
+  在深度学习与计算机视觉领域有较深入的研究，主要负责目标检测与图像分割相关算法的实现与优化。
+  热爱开源，积极参与社区贡献，在GitHub上维护了多个与计算机视觉相关的开源项目。
 ---
 
-# 张三
-
-## 个人简介
-这里是张三的个人详细介绍。主要研究方向为人工智能、大语言模型等。
-
-## 研究方向
-- 深度学习
-- 计算机视觉
-- 强化学习
-
-## 联系方式
-- 邮箱: zhangsan@example.com
-- Github: [zhangsan](https://github.com)
+<MemberProfileLoader />

@@ -5,11 +5,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "sync:teachers": "node scripts/sync-teachers.js",
-    "docs:build": "node scripts/sync-teachers.js && vuepress-vite build src",
-    "docs:clean-dev": "node scripts/sync-teachers.js && vuepress-vite dev src --clean-cache --port 4399",
-    "docs:dev": "node scripts/sync-teachers.js && vuepress-vite dev src --port 4399",
-    "docs:dev-4401": "node scripts/sync-teachers.js && vuepress-vite dev src --port 4401",
+    "docs:build": "vuepress-vite build src",
+    "docs:clean-dev": "vuepress-vite dev src --clean-cache --port 4399",
+    "docs:dev": "vuepress-vite dev src --port 4399",
+    "docs:dev-4401": "vuepress-vite dev src --port 4401",
     "docs:update-package": "pnpm dlx vp-update"
   },
   "devDependencies": {

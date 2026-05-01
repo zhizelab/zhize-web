@@ -25,8 +25,8 @@ export interface Teacher {
 
 /**
  * 卡片墙用的轻量信息
- * ⚠️ 本文件由 scripts/sync-teachers.js 自动生成，请勿手动修改
- *    改图片/信息请直接编辑 src/teachers/*.md 的 frontmatter，然后运行同步脚本
+ * ⚠️ 本文件由 VuePress onInitialized 钩子自动生成，请勿手动修改
+ *    改图片/信息请直接编辑 src/teachers/*.md 的 frontmatter
  */
 export interface TeacherCard {
   id: string;
@@ -114,7 +114,7 @@ export const allTeachers: TeacherCard[] = [
     "name": "顾杨",
     "title": "副教授",
     "role": "竞赛指导老师",
-    "avatar": "/images/portfolio_img/teacher_temp.png",
+    "avatar": "/images/teacher-photo/guyang-removebg.png",
     "shortBio": "研究方向简介",
     "researchAreas": [
       "研究方向1",
