@@ -1,11 +1,29 @@
 <template>
   <div v-if="mounted" class="global-user-access">
-    <div v-if="!loggedIn" class="entry-row">
+    <!-- 导航栏按钮（通过 JS 插入到 .vp-navbar-end） -->
+    <div ref="navBtnsRef" class="nav-entry-row" :class="{ hidden: navBtnsInserted }">
+      <button v-if="!loggedIn" class="nav-entry-btn" type="button" @click="showLogin = true">登录</button>
+      <button v-if="!loggedIn" class="nav-entry-btn ghost" type="button" @click="openTool('posts')">动态广场</button>
+      <template v-else>
+        <button class="nav-entry-btn" type="button" @click.stop="showMenu = !showMenu">{{ displayName }}</button>
+        <div v-if="showMenu" class="entry-menu" @click.stop>
+          <button type="button" @click="openTool('profile')">用户信息</button>
+          <button type="button" @click="openMembersDirectory">成员名录</button>
+          <button type="button" @click="openTool('posts')">社交广场</button>
+          <button type="button" @click="openVisitorDashboard">访客看板</button>
+          <button type="button" @click="checkLoginNow">校验登录状态</button>
+          <button type="button" class="danger" @click="handleLogout">退出登录</button>
+        </div>
+      </template>
+    </div>
+
+    <!-- 原始按钮（隐藏，但保留弹窗触发能力） -->
+    <div v-if="!loggedIn" class="entry-row origin-btns">
       <button class="entry-btn" type="button" @click="showLogin = true">登录</button>
       <button class="entry-btn ghost" type="button" @click="openTool('posts')">动态广场</button>
     </div>
 
-    <div v-else class="entry-row user-entry">
+    <div v-else class="entry-row user-entry origin-btns">
       <button class="entry-btn" type="button" @click.stop="showMenu = !showMenu">{{ displayName }}</button>
       <div v-if="showMenu" class="entry-menu" @click.stop>
         <button type="button" @click="openTool('profile')">用户信息</button>
@@ -193,6 +211,8 @@ type ToolType = "" | "profile" | "posts";
 type PostViewType = "square" | "publish";
 
 const mounted = ref(false);
+const navBtnsInserted = ref(false);
+const navBtnsRef = ref<HTMLElement | null>(null);
 const showMenu = ref(false);
 const showLogin = ref(false);
 const loginSubmitting = ref(false);
@@ -570,10 +590,32 @@ const handleDocumentClick = (event: MouseEvent): void => {
   showMenu.value = false;
 };
 
+const insertNavBtns = (): void => {
+  const navbarEnd = document.querySelector(".vp-navbar-end") as HTMLElement | null;
+  if (!navbarEnd || !navBtnsRef.value) return;
+  const clone = navBtnsRef.value.cloneNode(true) as HTMLElement;
+  clone.classList.remove("hidden");
+  clone.style.display = "flex";
+
+  // 绑定事件
+  const loginBtn = clone.querySelector("button:first-child") as HTMLElement | null;
+  const plazaBtn = clone.querySelector("button:nth-child(2)") as HTMLElement | null;
+  if (loginBtn) loginBtn.addEventListener("click", () => { showLogin.value = true; });
+  if (plazaBtn) plazaBtn.addEventListener("click", () => { openTool("posts"); });
+
+  navbarEnd.insertBefore(clone, navbarEnd.firstChild);
+  navBtnsInserted.value = true;
+};
+
 onMounted(async () => {
   mounted.value = true;
   document.addEventListener("click", handleDocumentClick);
   await initAuthSession();
+
+  // 延迟插入导航栏按钮，确保 DOM 已渲染
+  setTimeout(() => {
+    insertNavBtns();
+  }, 300);
 });
 
 onBeforeUnmount(() => {
@@ -595,6 +637,20 @@ onBeforeUnmount(() => {
   pointer-events: auto;
 }
 
+.origin-btns {
+  display: none !important;
+}
+
+.nav-entry-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-entry-row.hidden {
+  display: none !important;
+}
+
 .entry-row {
   display: flex;
   align-items: center;
@@ -603,6 +659,36 @@ onBeforeUnmount(() => {
 
 .user-entry {
   position: relative;
+}
+
+.nav-entry-btn {
+  border: 1px solid rgba(114, 155, 198, 0.54);
+  border-radius: 999px;
+  padding: 0.28rem 0.72rem;
+  background: rgba(8, 30, 56, 0.85);
+  color: #eff7ff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.nav-entry-btn:hover {
+  background: rgba(20, 60, 100, 0.95);
+  color: #fff;
+  border-color: rgba(150, 195, 240, 0.7);
+}
+
+.nav-entry-btn.ghost {
+  background: rgba(12, 39, 70, 0.8);
+}
+
+.nav-entry-btn.ghost:hover {
+  background: rgba(20, 60, 100, 0.95);
+  color: #fff;
+  border-color: rgba(150, 195, 240, 0.7);
 }
 
 .entry-btn {

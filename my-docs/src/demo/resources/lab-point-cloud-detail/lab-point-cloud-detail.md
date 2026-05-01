@@ -1,7 +1,7 @@
 ---
 title: 实验室环境点云详情
 icon: cubes
-order: 2
+order: 1
 category:
   - 技术文档
   - ROS机器人
@@ -44,10 +44,6 @@ author:
 点云页面入口：
 
 - <a href="/zz_lab-c3dcloud/index.html" target="_blank" rel="noopener noreferrer">打开实验室 3D 点云场景</a>
-
-建议从本页返回“环境准备”继续操作：
-
-- [返回环境准备](./environment.md)
 
 ## 四、建议用途
 

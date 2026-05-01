@@ -26,6 +26,12 @@ export default hopeTheme({
   // 使用统一蓝白视觉，不提供暗色切换
   darkmode: "disable",
 
+  // 面包屑
+  breadcrumb: false,
+
+  // 关闭 "在 GitHub 上编辑此页" 链接
+  editLink: false,
+
   // 页脚
   footer: "默认页脚",
   displayFooter: true,

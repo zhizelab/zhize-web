@@ -20,22 +20,6 @@ author:
 - 使用系统镜像创建虚拟机
 - 安装ROS环境：推荐使用Fishros一键脚本进行安装
 
-## 实验室环境点云（新增）
-
-我们已加入实验室环境点云场景（Gaussian Splat + PLY），可用于：
-
-- 实验室空间快速浏览与路线熟悉
-- 设备摆放位置复盘
-- 机器人导航/视觉任务前的环境预览
-
-点云详情与使用说明见：
-
-- [实验室环境点云详情](./lab-point-cloud-detail.md)
-
-如果你要直接打开 3D 场景，可跳转（建议新开页）：
-
-- <a href="/zz_lab-c3dcloud/index.html" target="_blank" rel="noopener noreferrer">打开实验室 3D 点云场景</a>
-
 ## Vmware三种网络模式
 
 ### 一、桥接模式

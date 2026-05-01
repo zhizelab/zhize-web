@@ -12,8 +12,8 @@ export default sidebar({
       link: "demo/",
       children: [
         {
-          text: "成员名录",
-          icon: "address-book",
+          text: "研究队伍",
+          icon: "users",
           link: "members-list",
           
         },
@@ -39,12 +39,12 @@ export default sidebar({
               expanded: false,
               children: [
                 "environment",
-                "lab-point-cloud-detail",
                 "nav",
                 "imageProcessing",
                 "visionTraining",
               ],
             },
+            "lab-point-cloud-detail/lab-point-cloud-detail",
             "hardware-training",
             "machine-learning-training",
           ],

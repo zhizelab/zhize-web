@@ -3,6 +3,7 @@ import { defineClientConfig } from "vuepress/client";
 
 import LabHomePage from "./components/pages/LabHomePage.vue";
 import TeamMembersPage from "./components/pages/TeamMembersPage.vue";
+import SuccessShowcase from "./components/pages/SuccessShowcase.vue";
 import GlobalGestureControl from "./components/global/GlobalGestureControl.vue";
 import GlobalAIAssistant from "./components/global/GlobalAIAssistant.vue";
 import VisitorDashboard from "./components/pages/VisitorDashboard.vue";
@@ -21,6 +22,7 @@ export default defineClientConfig({
     app.component("VisitorDashboard", VisitorDashboard);
     app.component("LabHomePage", LabHomePage);
     app.component("TeamMembersPage", TeamMembersPage);
+    app.component("SuccessShowcase", SuccessShowcase);
     app.component("TeachersShowcase", TeachersShowcase);
     app.component("TeacherProfile", TeacherProfile);
     app.component("TeacherProfileLoader", TeacherProfileLoader);
