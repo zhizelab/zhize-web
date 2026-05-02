@@ -95,19 +95,19 @@ const formattedBio = computed(() => {
 <style scoped>
 /* ========== Hero 区域：左侧大图 + 右侧信息 ========== */
 .mp-hero {
-  padding: 40px 24px 0;
+  padding: 40px 4vw 0;
   background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 50%, #f2f6fa 100%);
 }
 
 .mp-hero-card {
-  max-width: 960px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
-  gap: 40px;
+  gap: 48px;
   align-items: flex-start;
   background: #fff;
   border-radius: 20px;
-  padding: 32px;
+  padding: 32px 4vw;
   box-shadow: 0 4px 24px rgba(0,0,0,0.06);
 }
 
@@ -197,12 +197,12 @@ const formattedBio = computed(() => {
 
 /* ========== 主体布局 ========== */
 .mp-layout {
-  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 32px 24px 40px;
+  padding: 32px 4vw 40px;
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 32px;
+  grid-template-columns: 400px 1fr;
+  gap: 40px;
 }
 
 @media (max-width: 900px) {
@@ -334,9 +334,9 @@ const formattedBio = computed(() => {
 
 /* ========== 返回按钮 ========== */
 .mp-back {
-  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 24px 40px;
+  padding: 0 4vw 40px;
 }
 
 .mp-back-btn {
@@ -358,5 +358,17 @@ const formattedBio = computed(() => {
   background: #4a90d9;
   color: #fff;
   border-color: #4a90d9;
+}
+</style>
+
+<style>
+.member-profile-page [vp-content]:not(.custom) {
+  max-width: none !important;
+  width: 100vw !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+}
+.member-profile-page .vp-page-title {
+  display: none !important;
 }
 </style>

@@ -8,13 +8,28 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { usePageData } from "vuepress/client";
 import TeacherProfile from "./TeacherProfile.vue";
 import type { Teacher } from "../../data/teachers";
 
 const page = usePageData();
 const frontmatter = computed(() => page.value?.frontmatter || {});
+
+onMounted(() => {
+  // 移除内容区宽度限制
+  const vpContent = document.querySelector('[vp-content]') as HTMLElement | null;
+  if (vpContent) {
+    vpContent.style.maxWidth = 'none';
+    vpContent.style.width = '100%';
+    vpContent.style.padding = '0';
+  }
+  // 隐藏页面标题
+  const pageTitle = document.querySelector('.vp-page-title') as HTMLElement | null;
+  if (pageTitle) {
+    pageTitle.style.display = 'none';
+  }
+});
 
 const teacher = computed<Teacher | null>(() => {
   const fm = frontmatter.value;

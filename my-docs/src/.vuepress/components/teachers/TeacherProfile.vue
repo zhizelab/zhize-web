@@ -129,19 +129,19 @@ const formattedBio = computed(() => {
 <style scoped>
 /* ========== Hero 区域：左侧大图 + 右侧信息 ========== */
 .tp-hero {
-  padding: 40px 24px 0;
+  padding: 40px 4vw 0;
   background: linear-gradient(135deg, #f8f5f2 0%, #f0ebe6 50%, #f5f2ee 100%);
 }
 
 .tp-hero-card {
-  max-width: 960px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
-  gap: 40px;
+  gap: 48px;
   align-items: flex-start;
   background: #fff;
   border-radius: 20px;
-  padding: 32px;
+  padding: 32px 4vw;
   box-shadow: 0 4px 24px rgba(0,0,0,0.06);
 }
 
@@ -231,12 +231,12 @@ const formattedBio = computed(() => {
 
 /* ========== 主体布局 ========== */
 .tp-layout {
-  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 32px 24px 40px;
+  padding: 32px 4vw 40px;
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 32px;
+  grid-template-columns: 400px 1fr;
+  gap: 40px;
 }
 
 @media (max-width: 900px) {
@@ -432,9 +432,9 @@ const formattedBio = computed(() => {
 
 /* ========== 返回按钮 ========== */
 .tp-back {
-  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 24px 40px;
+  padding: 0 4vw 40px;
 }
 
 .tp-back-btn {
@@ -456,5 +456,17 @@ const formattedBio = computed(() => {
   background: #ff7e5f;
   color: #fff;
   border-color: #ff7e5f;
+}
+</style>
+
+<style>
+.teacher-profile-page [vp-content]:not(.custom) {
+  max-width: none !important;
+  width: 100vw !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+}
+.teacher-profile-page .vp-page-title {
+  display: none !important;
 }
 </style>
