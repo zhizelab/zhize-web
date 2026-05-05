@@ -74,6 +74,53 @@
   }
 }
 
+// ========== 成果展示页：强制全宽、去padding、隐藏所有头部元素 ==========
+.success-showcase-page {
+  &.page,
+  .page {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  .theme-hope-content,
+  .vp-page,
+  .page-content,
+  .content {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .vp-breadcrumb,
+  .breadcrumb,
+  nav[class*="breadcrumb"],
+  [class*="breadcrumb"] {
+    display: none !important;
+  }
+
+  .vp-page-title,
+  .page-title,
+  h1[class*="page-title"],
+  h1:first-of-type {
+    display: none !important;
+  }
+
+  .vp-page-meta,
+  .page-meta,
+  [class*="page-meta"],
+  [class*="meta-wrapper"] {
+    display: none !important;
+  }
+
+  .vp-page-title + hr,
+  .page-title + hr,
+  .vp-hr,
+  hr {
+    display: none !important;
+  }
+}
+
 // 全局确保 teachers-showcase 不受外层容器限制
 .teachers-showcase {
   background: transparent;

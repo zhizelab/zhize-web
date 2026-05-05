@@ -41,7 +41,7 @@ const teachers = allTeachers;
   left: 0;
   width: 100vw;
   height: calc(100vh - var(--navbar-height, 60px));
-  z-index: 10;
+  z-index: 999;
   overflow: hidden;
 }
 
@@ -54,7 +54,7 @@ const teachers = allTeachers;
   height: 100%;
   gap: 0;
   padding: 5vh 0 10vh 0;
-  background: linear-gradient(135deg, #f8f5f2 0%, #f0ebe6 50%, #f5f2ee 100%);
+  background: url('/images/teacher-photo/changzhou_campus.jpg') center/cover no-repeat;
   perspective: 1800px;
   perspective-origin: 50% 50%;
 }

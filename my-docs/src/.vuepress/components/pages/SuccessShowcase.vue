@@ -1,36 +1,59 @@
 <template>
   <div class="success-showcase">
-    <!-- Hero -->
-    <section class="sc-hero">
-      <img class="sc-hero-image" src="/images/main_img/hhu-bridge.png" alt="成果展示背景" />
-      <div class="sc-hero-mask"></div>
-      <div class="sc-hero-content">
-        <p class="sc-hero-kicker">成果展示</p>
-        <h1>实验室成果</h1>
-        <p>以赛促学，以研促创——记录实验室的每一步成长</p>
-      </div>
-    </section>
+    <!-- ===== 全屏 3D 转盘获奖证书墙 ===== -->
+    <section class="sc-carousel-fullscreen">
+      <div class="sc-carousel-bg"></div>
 
-    <!-- 竞赛获奖 -->
-    <section class="sc-section">
-      <div class="sc-section-header">
+      <div class="sc-carousel-ui">
         <h2>🏆 竞赛获奖</h2>
         <p>实验室成员在各类学科竞赛中的优异表现</p>
       </div>
-      <div class="sc-award-grid">
-        <article v-for="award in awards" :key="award.id" class="sc-award-card">
-          <div class="sc-award-icon">{{ award.icon }}</div>
-          <div class="sc-award-info">
-            <h3>{{ award.title }}</h3>
-            <p class="sc-award-level">{{ award.level }}</p>
-            <p class="sc-award-members">👥 {{ award.members }}</p>
-            <p class="sc-award-year">📅 {{ award.year }}</p>
+
+      <div class="sc-carousel-stage" ref="stageRef" :class="{ 'is-hovering': hoveredIndex !== null }">
+        <div class="sc-carousel-ring" :style="ringStyle">
+          <div
+            v-for="(award, i) in awards"
+            :key="award.id"
+            class="sc-carousel-card"
+            :style="cardPositionStyle(i)"
+            @mouseenter="onHover(i)"
+            @mouseleave="onLeave"
+          >
+            <div
+              class="sc-carousel-card-inner"
+              :class="{ 'is-hovered': hoveredIndex === i }"
+            >
+              <!-- 正面 -->
+              <div class="sc-carousel-card-front">
+                <img
+                  v-if="award.image"
+                  :src="award.image"
+                  :alt="award.title"
+                  draggable="false"
+                />
+                <div v-else class="sc-carousel-placeholder">
+                  <div class="sc-ph-ribbon">{{ award.level }}</div>
+                  <span class="sc-ph-icon">{{ award.icon }}</span>
+                  <span class="sc-ph-title">{{ award.title }}</span>
+                  <span class="sc-ph-year">{{ award.year }}</span>
+                </div>
+              </div>
+
+              <!-- hover 详情层 -->
+              <div class="sc-carousel-card-back">
+                <h4>{{ award.title }}</h4>
+                <p class="sc-back-level">{{ award.level }}</p>
+                <p class="sc-back-meta">👥 {{ award.members }}</p>
+                <p class="sc-back-meta">📅 {{ award.year }}</p>
+              </div>
+            </div>
           </div>
-        </article>
+        </div>
       </div>
+
     </section>
 
-    <!-- 项目成果 -->
+    <!-- ===== 项目成果 ===== -->
     <section class="sc-section sc-alt">
       <div class="sc-section-header">
         <h2>🚀 项目成果</h2>
@@ -57,134 +80,330 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from "vue";
+
+/* ---------- 数据 ---------- */
+//🥇🥈🥉🏅
 const awards = [
-  {
-    id: "award-1",
-    icon: "🥇",
-    title: "全国大学生电子设计竞赛",
-    level: "国家级一等奖",
-    members: "张三、李四、王五",
-    year: "2024",
-  },
-  {
-    id: "award-2",
-    icon: "🥈",
-    title: "全国大学生数学建模竞赛",
-    level: "省级一等奖",
-    members: "张三、赵六",
-    year: "2024",
-  },
-  {
-    id: "award-3",
-    icon: "🥇",
-    title: "中国大学生计算机设计大赛",
-    level: "国家级二等奖",
-    members: "李四、孙七",
-    year: "2023",
-  },
-  {
-    id: "award-4",
-    icon: "🥉",
-    title: "RoboMaster 机甲大师赛",
-    level: "区域赛三等奖",
-    members: "实验室机器人战队",
-    year: "2023",
-  },
+  { id: "a1", icon: "🥇", title: "全国大学生电子设计竞赛", level: "国家级一等奖", members: "张三、李四、王五", year: "2024", image: "/images/join-us_img/2025_AIC_group_total.jpg" },
+  { id: "a2", icon: "🥈", title: "全国大学生数学建模竞赛", level: "省级一等奖", members: "张三、赵六", year: "2024", image: "/images/join-us_img/DSC_4034.JPG" },
+  { id: "a3", icon: "🥇", title: "中国大学生计算机设计大赛", level: "国家级二等奖", members: "李四、孙七", year: "2023", image: "/images/join-us_img/DSC_4043.JPG" },
+  { id: "a4", icon: "🥉", title: "RoboMaster 机甲大师赛", level: "区域赛三等奖", members: "实验室机器人战队", year: "2023", image: "/images/join-us_img/group-photo_grade21to23.jpg" },
+  { id: "a5", icon: "🥇", title: "蓝桥杯全国软件大赛", level: "国家级一等奖", members: "王五", year: "2024", image: "/images/2025_AIC_img/wk.jpg" },
+  { id: "a6", icon: "🥈", title: "全国大学生智能车竞赛", level: "华东赛区二等奖", members: "赵六、孙七、周八", year: "2023", image: "/images/2025_AIC_img/wxl.jpg" },
+  { id: "a7", icon: "🥇", title: "中国研究生电子设计竞赛", level: "国家级一等奖", members: "李四、王五", year: "2024", image: "/images/2025_AIC_img/zxt.jpg" },
+  { id: "a8", icon: "🏅", title: "江苏省大学生机器人大赛", level: "省级特等奖", members: "实验室机器人战队", year: "2023", image: "/images/join-us_img/IMG_20251219_141930.jpg" },
+  { id: "a9", icon: "🥉", title: "全国大学生物联网设计竞赛", level: "华东赛区三等奖", members: "张三、周八", year: "2024", image: "/images/join-us_img/IMG_20251219_143906.jpg" },
+  { id: "a10", icon: "🥈", title: "人工智能创意赛", level: "国家级二等奖", members: "孙七、赵六", year: "2023", image: "/images/join-us_img/IMG_20251219_143935.jpg" },
+  { id: "a11", icon: "🥇", title: "服务外包创新创业大赛", level: "国家级一等奖", members: "王五、李四、张三", year: "2024", image: "/images/join-us_img/IMG_20251219_143946.jpg" },
+  { id: "a12", icon: "🏅", title: "江苏省大学生电子设计竞赛", level: "省级一等奖", members: "周八、赵六", year: "2023", image: "/images/join-us_img/IMG_20251219_144019.jpg" },
 ];
 
 const projects = [
-  {
-    id: "proj-1",
-    title: "智慧水利监测平台",
-    desc: "基于物联网与深度学习的水利设施智能监测系统，实现水位、流量、水质等多维度数据的实时采集与异常预警。",
-    tags: ["物联网", "深度学习", "水利"],
-    year: "2024",
-    cover: "",
-  },
-  {
-    id: "proj-2",
-    title: "机器人视觉导航系统",
-    desc: "基于 ROS 与 YOLO 的自主导航机器人，融合 SLAM 建图、视觉识别与路径规划，实现复杂室内环境下的自主巡航。",
-    tags: ["ROS", "SLAM", "目标检测"],
-    year: "2024",
-    cover: "",
-  },
-  {
-    id: "proj-3",
-    title: "实验室 3D 点云场景",
-    desc: "基于 Gaussian Splat 技术构建的实验室高精度三维点云场景，支持 Web 端实时浏览与交互，用于新成员环境熟悉与机器人任务预览。",
-    tags: ["3D Gaussian Splat", "点云", "WebGL"],
-    year: "2025",
-    cover: "/images/main_img/hhu-bridge.png",
-  },
-  {
-    id: "proj-4",
-    title: "智能问答系统",
-    desc: "基于大语言模型的领域知识问答系统，支持多轮对话与知识库检索，为实验室新人提供自动化的技术文档问答服务。",
-    tags: ["LLM", "RAG", "NLP"],
-    year: "2024",
-    cover: "",
-  },
+  { id: "proj-1", title: "智慧水利监测平台", desc: "基于物联网与深度学习的水利设施智能监测系统，实现水位、流量、水质等多维度数据的实时采集与异常预警。", tags: ["物联网", "深度学习", "水利"], year: "2024", cover: "" },
+  { id: "proj-2", title: "机器人视觉导航系统", desc: "基于 ROS 与 YOLO 的自主导航机器人，融合 SLAM 建图、视觉识别与路径规划，实现复杂室内环境下的自主巡航。", tags: ["ROS", "SLAM", "目标检测"], year: "2024", cover: "" },
+  { id: "proj-3", title: "实验室 3D 点云场景", desc: "基于 Gaussian Splat 技术构建的实验室高精度三维点云场景，支持 Web 端实时浏览与交互。", tags: ["3D Gaussian Splat", "点云", "WebGL"], year: "2025", cover: "/images/main_img/hhu-bridge.png" },
+  { id: "proj-4", title: "智能问答系统", desc: "基于大语言模型的领域知识问答系统，支持多轮对话与知识库检索。", tags: ["LLM", "RAG", "NLP"], year: "2024", cover: "" },
 ];
+
+/* ---------- 3D 转盘逻辑 ---------- */
+const stageRef = ref<HTMLElement | null>(null);
+const rotation = ref(0);
+const hoveredIndex = ref<number | null>(null);
+const isPaused = ref(false);
+let rafId = 0;
+const baseSpeed = 0.1; // 每帧基础旋转角度
+
+const count = awards.length;
+const cardW = 220;
+const cardH = 300;
+
+// 环形半径 = 卡片宽 / (2 * tan(π / N))
+const radius = Math.round(cardW / (2 * Math.tan(Math.PI / count)));
+
+const ringStyle = computed(() => ({
+  transform: `rotateY(${rotation.value}deg)`,
+}));
+
+const cardPositionStyle = (index: number) => {
+  const angle = (360 / count) * index;
+  return {
+    width: `${cardW}px`,
+    height: `${cardH}px`,
+    transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
+  };
+};
+
+const animate = () => {
+  if (!isPaused.value) {
+    rotation.value += baseSpeed;
+  }
+  rafId = requestAnimationFrame(animate);
+};
+
+const onHover = (index: number) => {
+  hoveredIndex.value = index;
+  isPaused.value = true;
+};
+
+const onLeave = () => {
+  hoveredIndex.value = null;
+  isPaused.value = false;
+};
+
+onMounted(() => {
+  rafId = requestAnimationFrame(animate);
+});
+
+onUnmounted(() => {
+  cancelAnimationFrame(rafId);
+});
 </script>
 
 <style scoped>
-/* ========== Hero ========== */
-.sc-hero {
+/* ========== 全屏 3D 转盘 ========== */
+.sc-carousel-fullscreen {
   position: relative;
-  height: 360px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc-carousel-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(15, 52, 96, 0.6) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(26, 26, 46, 0.8) 0%, transparent 60%),
+    linear-gradient(180deg, #0a0a12 0%, #12122b 40%, #0d0d1a 100%);
+}
+
+.sc-carousel-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 2px),
+    radial-gradient(circle at 60% 70%, rgba(255,255,255,0.02) 0%, transparent 2px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 2px);
+  background-size: 120px 120px, 180px 180px, 240px 240px;
+}
+
+/* 标题 */
+.sc-carousel-ui {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 24px;
+  pointer-events: none;
+}
+
+.sc-carousel-ui h2 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  margin: 0 0 8px;
+  letter-spacing: 4px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+}
+
+.sc-carousel-ui p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* 3D 舞台 */
+.sc-carousel-stage {
+  position: relative;
+  z-index: 5;
+  transition: z-index 0s;
+  width: 100%;
+  height: 420px;
+  perspective: 1100px;
+  transform-style: preserve-3d;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
-.sc-hero-image {
+.sc-carousel-ring {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.sc-carousel-stage.is-hovering {
+  z-index: 30;
+}
+
+/* 卡片外壳 —— 负责环形定位 */
+.sc-carousel-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  cursor: pointer;
+  margin-top: -150px; /* 高度一半，实现垂直居中 */
+  margin-left: -110px; /* 宽度一半，实现水平居中 */
+}
+
+
+
+/* 卡片内层 —— 负责 hover 放大 & 翻转 */
+.sc-carousel-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+}
+
+.sc-carousel-card-inner.is-hovered {
+  transform: scale(1.2) translateZ(60px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+
+/* 正面 */
+.sc-carousel-card-front {
   position: absolute;
   inset: 0;
+  background: #1a1a2e;
+  border: 2px solid rgba(201, 162, 39, 0.5);
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+.sc-carousel-card-front img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  display: block;
 }
 
-.sc-hero-mask {
+/* 占位样式 */
+.sc-carousel-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  position: relative;
+}
+
+.sc-carousel-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(201, 162, 39, 0.25);
+  pointer-events: none;
+}
+
+.sc-ph-ribbon {
+  position: absolute;
+  top: 10px;
+  right: -30px;
+  background: #c0392b;
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 3px 28px;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.sc-ph-icon {
+  font-size: 3rem;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.sc-ph-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #f0e6c8;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.sc-ph-year {
+  font-size: 0.72rem;
+  color: #c9a227;
+  font-weight: 600;
+}
+
+/* 背面详情 */
+.sc-carousel-card-back {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-}
-
-.sc-hero-content {
-  position: relative;
-  z-index: 1;
-  text-align: center;
+  background: rgba(10, 10, 18, 0.92);
   color: #fff;
-  max-width: 700px;
-  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  backface-visibility: hidden;
+  border: 2px solid rgba(201, 162, 39, 0.6);
 }
 
-.sc-hero-kicker {
-  font-size: 0.85rem;
+.sc-carousel-card-inner.is-hovered .sc-carousel-card-back {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sc-carousel-card-back h4 {
+  font-size: 0.9rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 3px;
   color: #ffd700;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
+  line-height: 1.3;
 }
 
-.sc-hero-content h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 900;
-  margin: 0 0 16px;
+.sc-back-level {
+  font-size: 0.82rem;
+  color: #ff7e5f;
+  font-weight: 700;
+  margin: 0 0 10px;
 }
 
-.sc-hero-content p {
-  font-size: 1.05rem;
-  opacity: 0.9;
-  margin: 0;
+.sc-back-meta {
+  font-size: 0.75rem;
+  color: #ccc;
+  margin: 0 0 4px;
 }
 
-/* ========== Section ========== */
+/* 底部提示 */
+.sc-carousel-hint {
+  position: relative;
+  z-index: 10;
+  margin-top: 20px;
+  color: rgba(255,255,255,0.35);
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+
+/* ========== 项目成果 ========== */
 .sc-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -213,58 +432,6 @@ const projects = [
   margin: 0;
 }
 
-/* ========== Award Grid ========== */
-.sc-award-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.sc-award-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 28px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-  border: 1px solid rgba(0,0,0,0.04);
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.sc-award-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-}
-
-.sc-award-icon {
-  font-size: 2.4rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.sc-award-info h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 6px;
-}
-
-.sc-award-level {
-  font-size: 0.9rem;
-  color: #ff7e5f;
-  font-weight: 700;
-  margin: 0 0 10px;
-}
-
-.sc-award-members,
-.sc-award-year {
-  font-size: 0.82rem;
-  color: #666;
-  margin: 0 0 4px;
-}
-
-/* ========== Project Grid ========== */
 .sc-project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -346,8 +513,17 @@ const projects = [
   margin: 0;
 }
 
+/* 响应式 */
 @media (max-width: 768px) {
-  .sc-award-grid,
+  .sc-carousel-stage {
+    height: 320px;
+  }
+  .sc-carousel-card {
+    width: 160px !important;
+    height: 220px !important;
+    margin-top: -110px !important;
+    margin-left: -80px !important;
+  }
   .sc-project-grid {
     grid-template-columns: 1fr;
   }
