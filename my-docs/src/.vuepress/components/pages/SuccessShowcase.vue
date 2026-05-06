@@ -121,10 +121,36 @@ let rafId = 0;
 const baseSpeed = 0.1;
 
 const count = awards.length;
-const cardW = 220;
-const cardH = 300;
 
-const radius = Math.round(cardW / (2 * Math.tan(Math.PI / count)));
+/* 卡片尺寸：竖版（肖像）/ 横版（风景） */
+const portraitW = 220;
+const portraitH = 300;
+const landscapeW = 280;
+const landscapeH = 200;
+
+/* 每张卡片的实际尺寸，初始默认竖版，图片加载后根据比例自动切换 */
+const cardDims = ref<Array<{ w: number; h: number }>>(
+  awards.map(() => ({ w: portraitW, h: portraitH }))
+);
+
+/* 用横版宽度计算半径，保证所有卡片都能容纳 */
+const maxCardW = Math.max(portraitW, landscapeW);
+const radius = Math.round(maxCardW / (2 * Math.tan(Math.PI / count)));
+
+/** 加载图片自动检测横竖比例并调整卡片尺寸 */
+const detectAspectRatios = () => {
+  awards.forEach((award, i) => {
+    if (!award.image) return;
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      cardDims.value[i] = ratio > 1.2
+        ? { w: landscapeW, h: landscapeH }
+        : { w: portraitW, h: portraitH };
+    };
+    img.src = award.image;
+  });
+};
 
 const ringStyle = computed(() => ({
   transform: `rotateY(${rotation.value}deg)`,
@@ -132,12 +158,13 @@ const ringStyle = computed(() => ({
 
 const cardPositionStyle = (index: number) => {
   const angle = (360 / count) * index;
+  const dims = cardDims.value[index];
   return {
-    width: `${cardW}px`,
-    height: `${cardH}px`,
+    width: `${dims.w}px`,
+    height: `${dims.h}px`,
     transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
-    marginTop: `${-cardH / 2}px`,
-    marginLeft: `${-cardW / 2}px`,
+    marginTop: `${-dims.h / 2}px`,
+    marginLeft: `${-dims.w / 2}px`,
   };
 };
 
@@ -157,6 +184,7 @@ const onLeave = () => {
 };
 
 onMounted(() => {
+  detectAspectRatios();
   rafId = requestAnimationFrame(animate);
 });
 
@@ -288,8 +316,9 @@ onUnmounted(() => {
 .sc-carousel-card-front img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  background: linear-gradient(145deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
 }
 
 /* 占位样式 */
