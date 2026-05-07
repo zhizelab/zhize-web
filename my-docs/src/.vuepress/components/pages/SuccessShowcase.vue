@@ -104,6 +104,7 @@ const awards = [
   { id: "a7", icon: "🏅", title: "第六届全球校园人工智能算法精英大赛", level: "优秀组织奖", members: "河海大学", year: "2024", image: "/images/awards/AIC6_hhu.jpg" },
   { id: "a8", icon: "🏅", title: "第六届全球校园人工智能算法精英大赛", level: "国家级奖项", members: "", year: "2024", image: "/images/awards/AIC6.jpg" },
   { id: "a9", icon: "🥉", title: "第十二届江苏省大学生计算机设计大赛", level: "省级三等奖", members: "黄嘉成、夏若轩、刘安乔、周浩逸、晏赫雄", year: "2025", image: "/images/awards/4C12_hjc.jpg" },
+  { id: "a10", icon: "🏅", title: "第七届江苏省大学生计算机设计大赛", level: "国家级奖项", members: "", year: "2025", image: "/images/awards/AIC7.jpg" },
 ];
 
 const projects = [
@@ -122,31 +123,41 @@ const baseSpeed = 0.1;
 
 const count = awards.length;
 
-/* 卡片尺寸：竖版（肖像）/ 横版（风景） */
-const portraitW = 220;
-const portraitH = 300;
-const landscapeW = 280;
-const landscapeH = 200;
+/* ---- 视口自适应缩放 ---- */
+const viewportW = ref(window.innerWidth);
+const viewportH = ref(window.innerHeight);
+const scale = computed(() => Math.max(0.5, Math.min(1.5, viewportW.value / 1920)));
 
-/* 每张卡片的实际尺寸，初始默认竖版，图片加载后根据比例自动切换 */
-const cardDims = ref<Array<{ w: number; h: number }>>(
-  awards.map(() => ({ w: portraitW, h: portraitH }))
+/* 卡片尺寸（随视口缩放） */
+const portraitW = computed(() => Math.round(260 * scale.value));
+const portraitH = computed(() => Math.round(340 * scale.value));
+const landscapeW = computed(() => Math.round(320 * scale.value));
+const landscapeH = computed(() => Math.round(230 * scale.value));
+
+/* 每张卡片方向：true = 横版 */
+const cardOrientations = ref<boolean[]>(awards.map(() => false));
+
+/* 卡片实际尺寸 */
+const cardDims = computed(() =>
+  cardOrientations.value.map((isLandscape) =>
+    isLandscape
+      ? { w: landscapeW.value, h: landscapeH.value }
+      : { w: portraitW.value, h: portraitH.value }
+  )
 );
 
-/* 用横版宽度计算半径，保证所有卡片都能容纳 */
-const maxCardW = Math.max(portraitW, landscapeW);
-const radius = Math.round(maxCardW / (2 * Math.tan(Math.PI / count)));
+/* 半径用横版宽度保证所有卡片都能容纳 */
+const maxCardW = computed(() => Math.max(portraitW.value, landscapeW.value));
+const radius = computed(() => Math.round(maxCardW.value / (2 * Math.tan(Math.PI / count))));
 
-/** 加载图片自动检测横竖比例并调整卡片尺寸 */
+/** 加载图片自动检测横竖比例 */
 const detectAspectRatios = () => {
   awards.forEach((award, i) => {
     if (!award.image) return;
     const img = new Image();
     img.onload = () => {
       const ratio = img.naturalWidth / img.naturalHeight;
-      cardDims.value[i] = ratio > 1.2
-        ? { w: landscapeW, h: landscapeH }
-        : { w: portraitW, h: portraitH };
+      cardOrientations.value[i] = ratio > 1.2;
     };
     img.src = award.image;
   });
@@ -162,7 +173,7 @@ const cardPositionStyle = (index: number) => {
   return {
     width: `${dims.w}px`,
     height: `${dims.h}px`,
-    transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
+    transform: `rotateY(${angle}deg) translateZ(${radius.value}px)`,
     marginTop: `${-dims.h / 2}px`,
     marginLeft: `${-dims.w / 2}px`,
   };
@@ -183,12 +194,25 @@ const onLeave = () => {
   hoveredIndex.value = null;
 };
 
+let resizePending = false;
+const onResize = () => {
+  if (resizePending) return;
+  resizePending = true;
+  requestAnimationFrame(() => {
+    viewportW.value = window.innerWidth;
+    viewportH.value = window.innerHeight;
+    resizePending = false;
+  });
+};
+
 onMounted(() => {
   detectAspectRatios();
+  window.addEventListener("resize", onResize);
   rafId = requestAnimationFrame(animate);
 });
 
 onUnmounted(() => {
+  window.removeEventListener("resize", onResize);
   cancelAnimationFrame(rafId);
 });
 </script>
@@ -258,7 +282,7 @@ onUnmounted(() => {
   z-index: 5;
   transition: z-index 0s;
   width: 100%;
-  height: 420px;
+  height: clamp(380px, 50vh, 600px);
   perspective: 1100px;
   transform-style: preserve-3d;
   display: flex;
