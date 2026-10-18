@@ -229,11 +229,11 @@ git branch
 git add .
 git commit -m "更新说明"
 
-# 3. 首次推送（建立本地 main 和远程 Code 的关联）
-git push -u origin main:Code
+# 3. 首次推送（建立本地 main 和远程 main 的关联）
+git push -u origin main
 
 # 4. 以后推送（关联建立后可直接 push）
-git push origin main:Code
+git push
 ```
 
 **关于分支的说明**：
