@@ -4,7 +4,7 @@
 
 ## 重点
 
-源码在https://github.com/zhizelab/zhize-web/的Code分支
+源码在https://github.com/zhizelab/zhize-web/的main分支
 
 静态挂载在https://github.com/zhizelab/zhizelab.github.io的main分支
 
@@ -15,7 +15,7 @@
 ```powershell
 git clone https://github.com/zhizelab/zhize-web.git
 cd zhize-web
-git checkout Code
+git checkout main
 ```
 
 ### 再次拉取
@@ -25,8 +25,8 @@ git checkout Code
 ```powershell
 cd zhize-web
 git fetch origin
-git checkout Code
-git pull origin Code
+git checkout main
+git pull origin main
 ```
 
 
@@ -163,7 +163,7 @@ sidebar: true
 
 常见字段（Theme Hope）：
 
-- title：页面标题（也影响页面 <h1> 和浏览器标题），因此除除配置块的正文不要用一级标题
+- title：页面标题（也影响页面 `<h1>` 和浏览器标题），因此除除配置块的正文不要用一级标题
 - description：页面描述
 - heroImage / heroText / tagline：首页 Hero 区域配置
 - navbar / sidebar：是否显示导航或侧边栏
@@ -181,7 +181,7 @@ sidebar: true
 
 上传时候base路径记得是空不要有其他的内容，不然会导致网页挂载有路径。（此处base路径即`.vuepress/config.ts`的base参数。）
 
-**更新时**：从源码仓库选择Code分支，下载到本地（如果源码不含node分支记得补上），在此基础上修改，然后提交。一般提交时两者静态部署和源码同步提交（参考下文）
+**更新时**：从源码仓库选择main分支，下载到本地（如果源码不含node分支记得补上），在此基础上修改，然后提交。一般提交时两者静态部署和源码同步提交（参考下文）
 
 ## 更新到github上（上传网页）
 
@@ -236,22 +236,16 @@ git push -u origin main
 git push
 ```
 
-**关于分支的说明**：
-- 本地分支名是 `main`
-- 远程分支名是 `Code`
-- 所以推送格式必须是 `main:Code`（本地:远程）
-- 如果报错 `src refspec Code does not match any`，说明你写的是 `git push origin Code`，这是错的，因为本地没有 `Code` 分支
-
 **多人协作时（先拉取再推送，避免冲突）**：
 
 ```powershell
 git fetch origin
-git pull origin Code   # 先拉取远程最新代码
-git push origin main:Code   # 再推送
+git pull origin main   # 先拉取远程最新代码
+git push origin main:main   # 再推送
 ```
 
 **如果遇到 push 失败**：
-- 检查梯子：开/关全局代理试试
+- 检查网络代理：开/关全局代理试试
 - 检查分支：运行 `git branch` 确认本地是 `main`
 - 检查远程：运行 `git remote -v` 确认远程地址正确
 - 实在不行就重复几次，或者加 `-f` 强制推送（单人开发时可用）
