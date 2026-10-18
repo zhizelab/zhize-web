@@ -7,49 +7,138 @@
       <div class="sc-carousel-ui">
         <h2>🏆 竞赛获奖</h2>
         <p>实验室成员在各类学科竞赛中的优异表现</p>
+        <a class="sc-details-link" href="#award-details">查看完整获奖名单 ↓</a>
       </div>
 
       <div
         class="sc-carousel-stage"
         ref="stageRef"
-        :class="{ 'is-hovering': hoveredIndex !== null }"
+        :class="{ 'is-hovering': hoveredId !== null }"
       >
-        <div class="sc-carousel-ring" :style="ringStyle">
+        <div class="sc-carousel-ring sc-ring-landscape" :style="landscapeRingStyle">
           <div
-            v-for="(award, i) in awards"
+            v-for="(award, i) in landscapeAwards"
             :key="award.id"
-            class="sc-carousel-card"
-            :style="cardPositionStyle(i)"
-            @mouseenter="onHover(i)"
+            class="sc-carousel-card sc-card-landscape"
+            :style="cardPositionStyle(i, landscapeAwards.length, 'landscape', 'outer')"
+            @mouseenter="onHover(award.id)"
             @mouseleave="onLeave"
           >
             <div
               class="sc-carousel-card-inner"
-              :class="{ 'is-hovered': hoveredIndex === i }"
+              :class="{ 'is-hovered': hoveredId === award.id }"
             >
               <div class="sc-carousel-card-front">
                 <img
                   v-if="award.image"
-                  :src="award.image"
+                  :src="withBase(award.image)"
                   :alt="award.title"
                   draggable="false"
                 />
                 <div v-else class="sc-carousel-placeholder">
                   <div class="sc-ph-ribbon">{{ award.level }}</div>
-                  <span class="sc-ph-icon">{{ award.icon }}</span>
+                  <span class="sc-ph-icon">🏅</span>
                   <span class="sc-ph-title">{{ award.title }}</span>
-                  <span class="sc-ph-year">{{ award.year }}</span>
+                  <span class="sc-ph-year">{{ award.date }}</span>
                 </div>
               </div>
               <div class="sc-carousel-card-back">
                 <h4>{{ award.title }}</h4>
                 <p class="sc-back-level">{{ award.level }}</p>
-                <p class="sc-back-meta">👥 {{ award.members }}</p>
-                <p class="sc-back-meta">📅 {{ award.year }}</p>
+                <p class="sc-back-meta">{{ award.teams[0].members || award.teams[0].teachers || "详见下方获奖详情" }}</p>
+                <p class="sc-back-meta">📅 {{ award.date }}</p>
               </div>
             </div>
           </div>
         </div>
+
+        <div class="sc-carousel-ring sc-ring-portrait" :style="portraitRingStyle">
+          <div
+            v-for="(award, i) in portraitAwards"
+            :key="award.id"
+            class="sc-carousel-card sc-card-portrait"
+            :style="cardPositionStyle(i, portraitAwards.length, 'portrait', 'inner')"
+            @mouseenter="onHover(award.id)"
+            @mouseleave="onLeave"
+          >
+            <div class="sc-carousel-card-inner" :class="{ 'is-hovered': hoveredId === award.id }">
+              <div class="sc-carousel-card-front">
+                <img :src="withBase(award.image)" :alt="award.title" draggable="false" />
+              </div>
+              <div class="sc-carousel-card-back">
+                <h4>{{ award.title }}</h4>
+                <p class="sc-back-level">{{ award.level }}</p>
+                <p class="sc-back-meta">{{ award.teams[0].members || award.teams[0].teachers || "详见下方获奖详情" }}</p>
+                <p class="sc-back-meta">📅 {{ award.date }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sc-section sc-gallery-section">
+      <div class="sc-section-header">
+        <h2>团队足迹</h2>
+        <p>竞赛同行，也记录并肩成长的每一次相聚</p>
+      </div>
+
+      <div class="sc-featured-gallery">
+        <figure
+          v-for="(photo, index) in featuredPhotos"
+          :key="photo.id"
+          class="sc-featured-photo"
+          :class="{ 'is-leading': index === 0 }"
+        >
+          <img :src="withBase(photo.src)" :alt="photo.title" loading="lazy" />
+          <figcaption>
+            <strong>{{ photo.title }}</strong>
+            <span>{{ photo.caption }}</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="sc-moments-heading">
+        <h3>竞赛现场与团队日常</h3>
+        <span>{{ momentPhotos.length }} 个片段</span>
+      </div>
+      <div class="sc-moments-grid">
+        <figure v-for="photo in momentPhotos" :key="photo.id" class="sc-moment-photo">
+          <img :src="withBase(photo.src)" :alt="photo.title" loading="lazy" />
+          <figcaption>
+            <strong>{{ photo.title }}</strong>
+            <span>{{ photo.caption }}</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="award-details" class="sc-section sc-awards-section">
+      <div class="sc-section-header">
+        <h2>获奖详情</h2>
+        <p>按获奖时间排列 · 点击证书查看原图</p>
+      </div>
+      <div class="sc-award-grid">
+        <article v-for="award in awards" :key="award.id" class="sc-award-detail" :class="{ 'sc-award-collection': award.teams.length > 1 }">
+          <a :href="withBase(award.image)" target="_blank" rel="noopener" class="sc-certificate-link" :aria-label="`查看${award.title}证书原图`">
+            <img :src="withBase(award.image)" :alt="`${award.title} · ${award.level}`" loading="lazy" />
+            <span>查看证书原图 ↗</span>
+          </a>
+          <div class="sc-award-info">
+            <p class="sc-award-date">{{ award.date }}</p>
+            <h3>{{ award.title }}</h3>
+            <p class="sc-award-level">{{ award.level }}</p>
+            <div class="sc-award-teams">
+            <div v-for="(team, index) in award.teams" :key="index" class="sc-award-team">
+              <h4>{{ award.teams.length > 1 ? `${index + 1} · ` : "" }}{{ team.level }}</h4>
+              <p v-if="team.project">{{ team.project }}</p>
+              <p v-if="team.members"><strong>获奖成员 / 单位：</strong>{{ team.members }}</p>
+              <p v-if="team.teachers"><strong>指导教师：</strong>{{ team.teachers }}</p>
+              <p v-if="team.note" class="sc-award-note">{{ team.note }}</p>
+            </div>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -92,20 +181,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 
-/* ---------- 数据 ---------- */
-// 🏅🥇🥈🥉
-const awards = [
-  { id: "a1", icon: "🥉", title: "第八届全国大学生嵌入式芯片与系统设计大赛", level: "国家级三等奖", members: "吴鑫磊、黄嘉成、王垚涵", year: "2025", image: "/images/awards/soc8_wxl.jpg" },
-  { id: "a2", icon: "🥈", title: "第十三届“中国软件杯”大学生软件设计大赛", level: "国家级二等奖", members: "张卓老师团队", year: "2024", image: "/images/awards/zrb13_zz.jpg" },
-  { id: "a3", icon: "🥇", title: "第十四届“中国软件杯”大学生软件设计大赛", level: "国家级一等奖", members: "", year: "2025", image: "/images/awards/zrb14_1.jpg" },
-  { id: "a4", icon: "🏅", title: "第十四届“中国软件杯”大学生软件设计大赛", level: "优秀指导教师", members: "张卓老师", year: "2025", image: "/images/awards/zrb14_zz.jpg" },
-  { id: "a5", icon: "🥉", title: "第十六届中国大学生服务外包创新创业大赛", level: "国家级三等奖", members: "谢乐妍、刘诗冉、侯婧馨、黄嘉成、蒋乐蕙", year: "2025", image: "/images/awards/fwwb16_xly.jpg" },
-  { id: "a6", icon: "🥉", title: "第十六届中国大学生服务外包创新创业大赛", level: "国家级三等奖", members: "欧阳博文、朱依武、孙展鹏、牛秀林、吴鑫磊", year: "2025", image: "/images/awards/fwwb16_oybw.jpg" },
-  { id: "a7", icon: "🏅", title: "第六届全球校园人工智能算法精英大赛", level: "优秀组织奖", members: "河海大学", year: "2024", image: "/images/awards/AIC6_hhu.jpg" },
-  { id: "a8", icon: "🏅", title: "第六届全球校园人工智能算法精英大赛", level: "国家级奖项", members: "", year: "2024", image: "/images/awards/AIC6.jpg" },
-  { id: "a9", icon: "🥉", title: "第十二届江苏省大学生计算机设计大赛", level: "省级三等奖", members: "黄嘉成、夏若轩、刘安乔、周浩逸、晏赫雄", year: "2025", image: "/images/awards/4C12_hjc.jpg" },
-  { id: "a10", icon: "🏅", title: "第七届江苏省大学生计算机设计大赛", level: "国家级奖项", members: "", year: "2025", image: "/images/awards/AIC7.jpg" },
-];
+import { withBase } from "vuepress/client";
+import { awards } from "../../data/awards";
+import { featuredPhotos, momentPhotos } from "../../data/gallery";
 
 const projects = [
   { id: "proj-1", title: "智慧水利监测平台", desc: "基于物联网与深度学习的水利设施智能监测系统，实现水位、流量、水质等多维度数据的实时采集与异常预警。", tags: ["物联网", "深度学习", "水利"], year: "2024", cover: "" },
@@ -117,15 +195,15 @@ const projects = [
 /* ---------- 3D 转盘逻辑 ---------- */
 const stageRef = ref<HTMLElement | null>(null);
 const rotation = ref(0);
-const hoveredIndex = ref<number | null>(null);
+const hoveredId = ref<string | null>(null);
 let rafId = 0;
 const baseSpeed = 0.1;
 
-const count = awards.length;
+const landscapeAwards = awards.filter((award) => award.orientation === "landscape");
+const portraitAwards = awards.filter((award) => award.orientation === "portrait");
 
 /* ---- 视口自适应缩放 ---- */
-const viewportW = ref(window.innerWidth);
-const viewportH = ref(window.innerHeight);
+const viewportW = ref(1920);
 const scale = computed(() => Math.max(0.5, Math.min(1.5, viewportW.value / 1920)));
 
 /* 卡片尺寸（随视口缩放） */
@@ -134,64 +212,54 @@ const portraitH = computed(() => Math.round(340 * scale.value));
 const landscapeW = computed(() => Math.round(320 * scale.value));
 const landscapeH = computed(() => Math.round(230 * scale.value));
 
-/* 每张卡片方向：true = 横版 */
-const cardOrientations = ref<boolean[]>(awards.map(() => false));
-
-/* 卡片实际尺寸 */
-const cardDims = computed(() =>
-  cardOrientations.value.map((isLandscape) =>
-    isLandscape
-      ? { w: landscapeW.value, h: landscapeH.value }
-      : { w: portraitW.value, h: portraitH.value }
-  )
+const landscapeRadius = computed(() =>
+  Math.round(landscapeW.value / (2 * Math.tan(Math.PI / landscapeAwards.length)))
+);
+const portraitRadius = computed(() =>
+  Math.max(150 * scale.value, Math.round(portraitW.value / (2 * Math.tan(Math.PI / portraitAwards.length))))
 );
 
-/* 半径用横版宽度保证所有卡片都能容纳 */
-const maxCardW = computed(() => Math.max(portraitW.value, landscapeW.value));
-const radius = computed(() => Math.round(maxCardW.value / (2 * Math.tan(Math.PI / count))));
-
-/** 加载图片自动检测横竖比例 */
-const detectAspectRatios = () => {
-  awards.forEach((award, i) => {
-    if (!award.image) return;
-    const img = new Image();
-    img.onload = () => {
-      const ratio = img.naturalWidth / img.naturalHeight;
-      cardOrientations.value[i] = ratio > 1.2;
-    };
-    img.src = award.image;
-  });
-};
-
-const ringStyle = computed(() => ({
+const landscapeRingStyle = computed(() => ({
   transform: `rotateY(${rotation.value}deg)`,
 }));
+const portraitRingStyle = computed(() => ({
+  transform: `rotateY(${-rotation.value * 1.35}deg)`,
+}));
 
-const cardPositionStyle = (index: number) => {
+const cardPositionStyle = (
+  index: number,
+  count: number,
+  orientation: "landscape" | "portrait",
+  ring: "outer" | "inner"
+) => {
   const angle = (360 / count) * index;
-  const dims = cardDims.value[index];
+  const dims = orientation === "landscape"
+    ? { w: landscapeW.value, h: landscapeH.value }
+    : { w: portraitW.value, h: portraitH.value };
+  const radius = ring === "outer" ? landscapeRadius.value : portraitRadius.value;
+  const translateY = ring === "outer" ? 54 * scale.value : -34 * scale.value;
   return {
     width: `${dims.w}px`,
     height: `${dims.h}px`,
-    transform: `rotateY(${angle}deg) translateZ(${radius.value}px)`,
+    transform: `rotateY(${angle}deg) translateZ(${radius}px) translateY(${translateY}px)`,
     marginTop: `${-dims.h / 2}px`,
     marginLeft: `${-dims.w / 2}px`,
   };
 };
 
 const animate = () => {
-  if (hoveredIndex.value === null) {
+  if (hoveredId.value === null) {
     rotation.value += baseSpeed;
   }
   rafId = requestAnimationFrame(animate);
 };
 
-const onHover = (index: number) => {
-  hoveredIndex.value = index;
+const onHover = (id: string) => {
+  hoveredId.value = id;
 };
 
 const onLeave = () => {
-  hoveredIndex.value = null;
+  hoveredId.value = null;
 };
 
 let resizePending = false;
@@ -200,13 +268,12 @@ const onResize = () => {
   resizePending = true;
   requestAnimationFrame(() => {
     viewportW.value = window.innerWidth;
-    viewportH.value = window.innerHeight;
     resizePending = false;
   });
 };
 
 onMounted(() => {
-  detectAspectRatios();
+  viewportW.value = window.innerWidth;
   window.addEventListener("resize", onResize);
   rafId = requestAnimationFrame(animate);
 });
@@ -221,8 +288,8 @@ onUnmounted(() => {
 /* ========== 全屏 3D 转盘 ========== */
 .sc-carousel-fullscreen {
   position: relative;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: calc(100vw - 24px);
+  margin-left: calc(-50vw + 50% + 12px);
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -258,7 +325,6 @@ onUnmounted(() => {
   text-align: center;
   color: #fff;
   margin-bottom: 24px;
-  pointer-events: none;
 }
 
 .sc-carousel-ui h2 {
@@ -282,8 +348,8 @@ onUnmounted(() => {
   z-index: 5;
   transition: z-index 0s;
   width: 100%;
-  height: clamp(380px, 50vh, 600px);
-  perspective: 1100px;
+  height: clamp(430px, 58vh, 680px);
+  perspective: 1250px;
   transform-style: preserve-3d;
   display: flex;
   align-items: center;
@@ -300,6 +366,14 @@ onUnmounted(() => {
   height: 0;
   transform-style: preserve-3d;
   will-change: transform;
+}
+
+.sc-ring-landscape {
+  z-index: 1;
+}
+
+.sc-ring-portrait {
+  z-index: 2;
 }
 
 /* 卡片外壳 —— 负责环形定位 */
@@ -323,7 +397,7 @@ onUnmounted(() => {
 }
 
 .sc-carousel-card-inner.is-hovered {
-  transform: scale(1.2) translateZ(60px);
+  transform: scale(1.16) translateZ(70px);
   box-shadow: 0 24px 60px rgba(0,0,0,0.5);
 }
 
@@ -447,6 +521,134 @@ onUnmounted(() => {
   margin: 0 0 4px;
 }
 
+/* ========== 团队照片 ========== */
+.sc-gallery-section {
+  max-width: 1320px;
+}
+
+.sc-featured-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 230px;
+  gap: 16px;
+}
+
+.sc-featured-photo,
+.sc-moment-photo {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #101b2d;
+}
+
+.sc-featured-photo.is-leading {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.sc-featured-photo:nth-child(6),
+.sc-featured-photo:nth-child(7) {
+  grid-column: span 2;
+}
+
+.sc-featured-photo img,
+.sc-moment-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.sc-featured-photo:hover img,
+.sc-moment-photo:hover img {
+  transform: scale(1.035);
+}
+
+.sc-featured-photo::after,
+.sc-moment-photo::after {
+  content: "";
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(transparent, rgba(4, 12, 26, 0.88));
+  pointer-events: none;
+}
+
+.sc-featured-photo figcaption,
+.sc-moment-photo figcaption {
+  position: absolute;
+  z-index: 1;
+  left: 18px;
+  right: 18px;
+  bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #fff;
+}
+
+.sc-featured-photo figcaption strong,
+.sc-moment-photo figcaption strong {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.sc-featured-photo figcaption span,
+.sc-moment-photo figcaption span {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.82rem;
+}
+
+.sc-moments-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 48px 0 18px;
+  border-bottom: 1px solid #dce2eb;
+  padding-bottom: 12px;
+}
+
+.sc-moments-heading h3 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 1.25rem;
+}
+
+.sc-moments-heading span {
+  color: #667085;
+  font-size: 0.85rem;
+}
+
+.sc-moments-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.sc-moment-photo {
+  aspect-ratio: 4 / 3;
+}
+
+/* ========== 可直接阅读的证书与名单 ========== */
+.sc-details-link { display: inline-block; margin-top: 18px; color: #f4d68b; }
+.sc-award-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
+.sc-award-collection { grid-column: 1 / -1; }
+.sc-award-collection .sc-award-teams { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+.sc-award-detail { border: 1px solid #e1e5ee; border-radius: 16px; overflow: hidden; background: #fff; color: #1a1a1a; box-shadow: 0 4px 20px #1523400a; }
+.sc-certificate-link { display: block; padding: 20px; background: #f0f2f7; text-align: center; }
+.sc-certificate-link img { display: block; width: 100%; height: 260px; object-fit: contain; }
+.sc-certificate-link span { display: inline-block; margin-top: 12px; font-size: .85rem; color: #405c94; }
+.sc-award-info { padding: 24px; }
+.sc-award-info h3 { margin: 8px 0 12px; font-size: 1.15rem; line-height: 1.5; }
+.sc-award-date { margin: 0; color: #667085; font-size: .85rem; }
+.sc-award-level { color: #a74418; font-weight: 700; }
+.sc-award-team { border-top: 1px solid #edf0f5; margin-top: 16px; padding-top: 12px; }
+.sc-award-team h4 { margin: 0 0 8px; font-size: .95rem; }
+.sc-award-team p { margin: 6px 0; line-height: 1.8; font-size: .9rem; overflow-wrap: anywhere; }
+.sc-award-team .sc-award-note { color: #667085; font-size: .8rem; }
+@media (max-width: 768px) { .sc-award-grid, .sc-award-collection .sc-award-teams { grid-template-columns: 1fr; } }
+
 /* ========== 项目成果 ========== */
 .sc-section {
   max-width: 1200px;
@@ -558,8 +760,48 @@ onUnmounted(() => {
 }
 
 @media (max-width: 768px) {
+  .sc-carousel-ui {
+    margin-bottom: 8px;
+  }
+
+  .sc-featured-gallery,
+  .sc-moments-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 180px;
+  }
+
+  .sc-featured-photo.is-leading,
+  .sc-featured-photo:nth-child(6),
+  .sc-featured-photo:nth-child(7) {
+    grid-column: span 2;
+  }
+
+  .sc-moment-photo {
+    aspect-ratio: auto;
+  }
+
   .sc-project-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .sc-featured-gallery,
+  .sc-moments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sc-featured-photo,
+  .sc-featured-photo.is-leading,
+  .sc-featured-photo:nth-child(6),
+  .sc-featured-photo:nth-child(7) {
+    grid-column: auto;
+    grid-row: auto;
+    height: 230px;
+  }
+
+  .sc-moment-photo {
+    height: 220px;
   }
 }
 </style>
