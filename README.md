@@ -191,11 +191,12 @@ cd 路径\my-docs
 pnpm docs:build
 
 cd src/.vuepress/dist
-如果没有git库要git init一下
+如果没有git库要git init一下   # 大概率没有，不用担心
 git add .
 git commit -m "更新说明"
 git push -f https://github.com/zhizelab/zhizelab.github.io.git main   # 若报错可以先运行git branch -M master main(这取决于你运行git branch是哪个，是master的话会报错)，还有可能是没有开/关梯子的问题，关/开之后就好了，若还没好，重复几次
 # 如果上传不上去可以试试开全局模式 
+删掉上面git init的 .git （在dist目录下），（一定不要删除和my-docs同级别的那个.git）  # 因为这个.git会干扰外层.git
 ```
 
 然后需要等待几分钟就可以在 https://zhizelab.github.io/ 看到更新后的网页了，此时[setting-github pages](https://github.com/zhizelab/zhizelab.github.io/settings/pages)会有部署记录的
@@ -205,7 +206,7 @@ git push -f https://github.com/zhizelab/zhizelab.github.io.git main   # 若报�
 **前置检查**：确保你在项目根目录（和 `my-docs` 同级的那个目录），并且该目录下有 `.git` 仓库。不要进入 `dist` 目录操作。
 
 ```powershell
-删掉之前git init的 .git 在dist目录下，（一定不要删除和my-docs同级别的那个.git）
+删掉之前git init的 .git （在dist目录下），（一定不要删除和my-docs同级别的那个.git）
 cd my-docs上一级路径
 # git init     # 一般用不到，除非你删除了和my-docs同级别的那个.git
 
@@ -225,7 +226,7 @@ cd my-docs上一级路径
 git branch
 
 # 2. 提交更改
-git add my-docs .gitignore
+git add .
 git commit -m "更新说明"
 
 # 3. 首次推送（建立本地 main 和远程 Code 的关联）
