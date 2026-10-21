@@ -232,4 +232,4 @@ contours, hierarchy = cv2.findContours(
 )
 ```
 
-更新日期：2025年9月24日
+更新日期：2026年10月18日

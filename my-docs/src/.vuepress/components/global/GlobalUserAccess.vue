@@ -8,7 +8,6 @@
         <button class="nav-entry-btn" type="button" @click.stop="showMenu = !showMenu">{{ displayName }}</button>
         <div v-if="showMenu" class="entry-menu" @click.stop>
           <button type="button" @click="openTool('profile')">用户信息</button>
-          <button type="button" @click="openMembersDirectory">成员名录</button>
           <button type="button" @click="openTool('posts')">社交广场</button>
           <button type="button" @click="openVisitorDashboard">访客看板</button>
           <button type="button" @click="checkLoginNow">校验登录状态</button>
@@ -27,7 +26,6 @@
       <button class="entry-btn" type="button" @click.stop="showMenu = !showMenu">{{ displayName }}</button>
       <div v-if="showMenu" class="entry-menu" @click.stop>
         <button type="button" @click="openTool('profile')">用户信息</button>
-        <button type="button" @click="openMembersDirectory">成员名录</button>
         <button type="button" @click="openTool('posts')">社交广场</button>
         <button type="button" @click="openVisitorDashboard">访客看板</button>
         <button type="button" @click="checkLoginNow">校验登录状态</button>
@@ -105,6 +103,8 @@
                   class="post-image"
                   :src="resolveAssetUrl(post.imageUrl)"
                   :alt="`动态图片-${post.id}`"
+                  loading="lazy"
+                  decoding="async"
                   @error="markImageBroken(post.id)"
                 />
                 <p v-else-if="post.imageUrl" class="img-tip">图片加载失败，请刷新重试。</p>
@@ -149,6 +149,8 @@
                     class="post-image chat-image"
                     :src="resolveAssetUrl(selectedPost.imageUrl)"
                     :alt="`动态图片-${selectedPost.id}`"
+                    loading="lazy"
+                    decoding="async"
                     @error="markImageBroken(selectedPost.id)"
                   />
                 </div>
@@ -233,6 +235,7 @@ const chatText = ref("");
 const brokenImages = reactive<Record<number, boolean>>({});
 
 let refreshTimer: number | null = null;
+let insertedNavButtons: HTMLElement | null = null;
 
 const loginForm = reactive({
   username: "",
@@ -263,9 +266,21 @@ const stopAutoRefresh = (): void => {
 const startAutoRefresh = (): void => {
   stopAutoRefresh();
   refreshTimer = window.setInterval(() => {
+    if (document.hidden) return;
     if (activeTool.value !== "posts" || postView.value !== "square") return;
     void loadPosts(true);
   }, 15000);
+};
+
+const handleVisibilityChange = (): void => {
+  if (document.hidden) {
+    stopAutoRefresh();
+    return;
+  }
+
+  if (activeTool.value === "posts" && postView.value === "square") {
+    startAutoRefresh();
+  }
 };
 
 const formatDate = (rawValue: string): string => {
@@ -561,11 +576,6 @@ const openVisitorDashboard = (): void => {
   window.location.href = "/visitor-dashboard.html";
 };
 
-const openMembersDirectory = (): void => {
-  showMenu.value = false;
-  window.location.href = "/demo/members-list.html";
-};
-
 const handleLogout = (): void => {
   logoutSession();
   showMenu.value = false;
@@ -604,12 +614,14 @@ const insertNavBtns = (): void => {
   if (plazaBtn) plazaBtn.addEventListener("click", () => { openTool("posts"); });
 
   navbarEnd.insertBefore(clone, navbarEnd.firstChild);
+  insertedNavButtons = clone;
   navBtnsInserted.value = true;
 };
 
 onMounted(async () => {
   mounted.value = true;
   document.addEventListener("click", handleDocumentClick);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
   await initAuthSession();
 
   // 延迟插入导航栏按钮，确保 DOM 已渲染
@@ -621,6 +633,9 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   stopAutoRefresh();
   document.removeEventListener("click", handleDocumentClick);
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
+  insertedNavButtons?.remove();
+  insertedNavButtons = null;
 });
 </script>
 

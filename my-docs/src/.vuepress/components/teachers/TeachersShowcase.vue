@@ -7,7 +7,7 @@
          :href="teacher.link">
         <div class="ts-card-visual">
           <div class="ts-card-photo-wrap">
-            <img class="ts-card-photo" :src="teacher.avatar" :alt="teacher.name" />
+            <img class="ts-card-photo" :class="{ 'ts-card-photo--compact': teacher.id === 'shipengfei' }" :src="teacher.avatar" :alt="teacher.name" loading="lazy" decoding="async" />
           </div>
           <div class="ts-card-tag">
             <span class="ts-card-tag-name">{{ teacher.name }}</span>
@@ -134,6 +134,13 @@ const teachers = allTeachers;
   border-radius: 16px 16px 0 0;
   mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+}
+
+.ts-card-photo--compact {
+  object-fit: contain;
+  object-position: center bottom;
+  transform: scale(0.9);
+  transform-origin: center bottom;
 }
 
 .ts-card-tag {

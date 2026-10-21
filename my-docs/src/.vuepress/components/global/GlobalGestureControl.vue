@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { loadHandTrack, type HandTrackModel, type HandTrackModule } from "../../utils/handTrackLoader";
 
 let gestureModel: HandTrackModel | null = null;
 let gestureModelLoadingTask: Promise<void> | null = null;
@@ -39,23 +40,6 @@ type HandTrackPrediction = {
   score?: number | string;
   class?: number | string;
   label?: string;
-};
-
-type HandTrackModelOptions = {
-  scoreThreshold?: number;
-  iouThreshold?: number;
-  maxNumBoxes?: number;
-  flipHorizontal?: boolean;
-  modelType?: string;
-  modelSize?: string;
-};
-
-type HandTrackModel = {
-  detect: (input: HTMLVideoElement) => Promise<HandTrackPrediction[]>;
-};
-
-type HandTrackModule = {
-  load: (options?: HandTrackModelOptions) => Promise<HandTrackModel>;
 };
 
 type GestureDirection = "left" | "right" | "up" | "down";
@@ -519,7 +503,7 @@ const ensureGestureModelLoaded = async (): Promise<void> => {
   if (!gestureModelLoadingTask) {
     gestureModelLoadingTask = (async () => {
       gestureStatusText.value = "正在加载手势模型（首次加载约几秒）...";
-      const handTrack = (await import("handtrackjs")) as unknown as HandTrackModule;
+      const handTrack: HandTrackModule = await loadHandTrack();
       gestureModel = await handTrack.load({
         scoreThreshold: 0.35,
         iouThreshold: 0.3,

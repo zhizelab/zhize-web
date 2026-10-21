@@ -1,7 +1,7 @@
 <template>
   <div class="lab-home">
     <section id="home" class="banner">
-      <img class="banner-image" src="/images/main_img/light-in-main.jpg" alt="实验室首页横幅" />
+      <img class="banner-image" src="/images/main_img/light-in-main.jpg" alt="实验室首页横幅" width="2560" height="1919" fetchpriority="high" decoding="async" />
       <div class="banner-mask"></div>
       <div class="banner-effects" aria-hidden="true">
         <span
@@ -19,16 +19,15 @@
         <span class="water-wave wave-1"></span>
         <span class="water-wave wave-2"></span>
         <span class="water-wave wave-3"></span>
-      </div>
+        </div>
 
       <div class="title-box">
-        <img class="hero-logo" src="/images/logos/zhizelab_logo.png" alt="智泽实验室 Logo" />
+        <img class="hero-logo" src="/images/logos/zhizelab_logo.png" alt="智泽实验室 Logo" width="500" height="136" decoding="async" />
         <h1 class="hero-title">河海大学智泽实验室</h1>
         <div class="hero-chip-list">
           <span v-for="tag in heroTags" :key="tag">{{ tag }}</span>
         </div>
         <div class="hero-actions">
-          <a href="/demo/" class="hero-main-action">了解更多</a>
           <a href="/join-us" class="hero-sub-action">加入我们</a>
         </div>
       </div>
@@ -42,27 +41,27 @@
     <section id="about" class="mode mode-about">
       <div class="mode-header">
         <h2>关于实验室</h2>
-        <a href="/demo/">了解更多</a>
       </div>
       <div class="mode-about-layout">
         <article class="mode-panel intro-text">
           <p class="intro-lead">
-            智泽实验室依托河海大学学科优势，围绕“人工智能 + 行业场景”开展持续研究与工程实践，强调从理论到落地的完整闭环。
+            智泽实验室依托河海大学人工智能与自动化学院，围绕智能机器人与人工智能应用开展研究。
+            以智能车、机器狗和机械臂等为研究对象，聚焦复杂场景中的环境感知、自主导航、运动控制与多机协同。
           </p>
           <p>
-            团队以真实问题为牵引，聚焦智慧水利、计算机视觉、机器人系统与工程部署，构建从数据治理、模型训练到系统迭代的全流程能力，
-            让科研成果在真实场景中可验证、可复用、可扩展。
+            实验室研究工作涵盖算法设计、嵌入式开发、软硬件系统集成及仿真与实机验证，
+            关注机器人在复杂环境中的自主作业能力、协同效率与运行可靠性，探索相关技术在智能巡检等场景中的应用。
           </p>
           <ul class="about-points">
-            <li>方向聚焦：人工智能应用、嵌入式系统、ROS 机器人与工程化开发</li>
-            <li>组织方式：项目驱动 + 比赛训练 + 技术分享，形成稳定成长路径</li>
-            <li>能力目标：解决复杂场景问题，提升成员独立研发与协同交付能力</li>
+            <li>在研项目：巡检无人车系统、四足机器狗系统的设计与应用。</li>
+            <li>竞赛实践：参与中国软件杯、算法精英赛、服务外包、嵌入式与物联网等竞赛，2024—2026 年累计获国家级一等奖 16 项、二等奖 9 项。</li>
+            <li>科研成果：国家级大创项目 2 项、学术论文 2 篇、专利 3 项。</li>
           </ul>
         </article>
         <aside class="mode-panel about-visual">
           <figure class="about-figure">
-            <img src="/images/join-us_img/DSC_4034.JPG" alt="智泽实验室研讨交流" />
-            <figcaption>实验室合照</figcaption>
+            <img :src="galleryImage('iot-team-all')" alt="嵌入式芯片与系统设计竞赛团队合影" loading="lazy" decoding="async" />
+            <figcaption>比赛合影</figcaption>
           </figure>
         </aside>
       </div>
@@ -75,11 +74,8 @@
       </div>
       <div class="research-activity-layout">
         <div class="research-grid">
-          <a v-for="item in researchItems" :key="item.title" class="research-card" :href="item.link">
-            <img :src="item.image" :alt="item.title" />
-            <span class="research-tag">{{ item.tag }}</span>
-            <span class="research-title">{{ item.title }}</span>
-            <p class="research-desc">{{ item.desc }}</p>
+          <a v-for="item in researchItems" :key="item.image" class="research-card" :href="item.link" :aria-label="item.alt">
+            <img :src="item.image" :alt="item.alt" loading="lazy" decoding="async" />
           </a>
         </div>
         <aside class="mode-panel activity-timeline">
@@ -102,9 +98,8 @@
         <a href="/join-us">更多记录</a>
       </div>
       <div class="gallery-grid">
-        <a v-for="item in galleryItems" :key="item.image" class="gallery-card" :href="item.link">
-          <img :src="item.image" :alt="item.title" />
-          <span>{{ item.title }}</span>
+        <a v-for="item in galleryItems" :key="item.image" class="gallery-card" :href="item.link" :aria-label="item.alt">
+          <img :src="item.image" :alt="item.alt" loading="lazy" decoding="async" />
         </a>
       </div>
     </section>
@@ -118,8 +113,6 @@
         <a v-for="item in footerLinks" :key="item.title" :href="item.link">{{ item.title }}</a>
       </div>
       <div class="footer-contact">
-        <p>联系邮箱：暂无</p>
-        <p>联系电话：暂无</p>
         <p>地址：人工智能与自动化学院212室</p>
         <p>qq群：963390856</p>
       </div>
@@ -129,6 +122,8 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { loadHandTrack, type HandTrackModel, type HandTrackModule } from "../../utils/handTrackLoader";
+import { galleryPhotos } from "../../data/gallery";
 
 let modeObserver: IntersectionObserver | null = null;
 let gestureModel: HandTrackModel | null = null;
@@ -147,23 +142,6 @@ type HandTrackPrediction = {
   score?: number | string;
   class?: number | string;
   label?: string;
-};
-
-type HandTrackModelOptions = {
-  scoreThreshold?: number;
-  iouThreshold?: number;
-  maxNumBoxes?: number;
-  flipHorizontal?: boolean;
-  modelType?: string;
-  modelSize?: string;
-};
-
-type HandTrackModel = {
-  detect: (input: HTMLVideoElement) => Promise<HandTrackPrediction[]>;
-};
-
-type HandTrackModule = {
-  load: (options?: HandTrackModelOptions) => Promise<HandTrackModel>;
 };
 
 const gestureClassLabelMap: Record<number, string> = {
@@ -566,7 +544,7 @@ const ensureGestureModelLoaded = async (): Promise<void> => {
   if (!gestureModelLoadingTask) {
     gestureModelLoadingTask = (async () => {
       gestureStatusText.value = "正在加载手势模型（首次加载约几秒）...";
-      const handTrack = (await import("handtrackjs")) as unknown as HandTrackModule;
+      const handTrack: HandTrackModule = await loadHandTrack();
       gestureModel = await handTrack.load({
         scoreThreshold: 0.35,
         iouThreshold: 0.3,
@@ -711,56 +689,51 @@ const metricItems = [
   { value: "40+", label: "年度活动" },
 ];
 
+const galleryPhotoById = new Map(galleryPhotos.map((photo) => [photo.id, photo]));
+
+const galleryImage = (id: string): string => galleryPhotoById.get(id)?.src ?? "";
+
 const researchItems = [
   {
-    title: "中国软件杯挑战赛",
-    tag: "2024-11-15",
-    desc: "构建机器狗在复杂环境中的自主导航与任务执行能力。",
-    image: "/images/join-us_img/group-photo_grade21to23.jpg",
+    image: galleryImage("aic-all"),
+    alt: "比赛团队合影",
     link: "/demo/success",
   },
   {
-    title: "智慧社区算法精英赛",
-    tag: "2025-12-30",
-    desc: "结合真实场景的计算机视觉和机器人应用",
-    image: "/images/join-us_img/2025_AIC_group_total.jpg",
+    image: galleryImage("aic-team"),
+    alt: "比赛团队合影",
     link: "/demo/success",
   },
   {
-    title: "全国服务外包大赛",
-    tag: "2025-04-20",
-    desc: "构建完善的社区识别体系与智能化应用。",
-    image: "/images/join-us_img/IMG_20251219_144019.jpg",
+    image: galleryImage("fwwb-nanjing"),
+    alt: "比赛团队合影",
     link: "/demo/success",
   },
   {
-    title: "计算机设计大赛",
-    tag: "2025-09-10",
-    desc: "面向计算机的算法与系统设计竞赛，推动技术落地与创新。",
-    image: "/images/join-us_img/8700ace640b91a0fd67047b4cdb88ce-scaled.jpg",
+    image: galleryImage("iot-team-all"),
+    alt: "比赛团队合影",
     link: "/demo/success",
   },
 ];
 
 const activityItems = [
-  { date: "2025-12-30", title: "智慧社区比赛完赛", place: "江阴", link: "/demo/resources/ROStrain" },
-  { date: "2026-01-18", title: "寒假学习计划与任务分配", place: "河海大学", link: "/demo/success"},
-  { date: "2026-03-02", title: "寒假学习成果验收", place: "河海大学", link: "/demo/success" },
+  { date: "2026年8月", title: "第十五届“中国软件杯”大学生软件设计大赛", place: "全国总决赛", link: "/demo/success" },
+  { date: "2026年8月", title: "第九届全国大学生嵌入式芯片与系统设计竞赛", place: "全国总决赛", link: "/demo/success" },
+  { date: "2026年8月", title: "第十三届全国大学生物联网设计竞赛", place: "全国总决赛", link: "/demo/success" },
+  { date: "2026年7月", title: "第十七届中国大学生服务外包创新创业大赛", place: "全国赛", link: "/demo/success" },
 ];
 
 const galleryItems = [
-  { title: "实验室团队", image: "/images/join-us_img/2025_AIC_group_total.jpg", link: "/join-us" },
-  { title: "校园风景", image: "/images/main_img/hhu-bridge.png", link: "/demo/success" },
-  { title: "技术交流", image: "/images/join-us_img/IMG_20251219_143906.jpg", link: "/join-us" },
-  { title: "比赛记录", image: "/images/join-us_img/IMG_20251219_141930.jpg", link: "/demo/resources/" },
-  { title: "活动剪影", image: "/images/join-us_img/IMG_20251219_143946.jpg", link: "/join-us" },
-  { title: "团队合作", image: "/images/join-us_img/IMG_20251219_144019.jpg", link: "/join-us" },
+  { image: galleryImage("aic-test"), alt: "机器人赛前测试照片", link: "/join-us" },
+  { image: galleryImage("aic-debug"), alt: "机器人现场调试照片", link: "/join-us" },
+  { image: galleryImage("aic-code-1"), alt: "算法调试照片", link: "/join-us" },
+  { image: galleryImage("aic-code-2"), alt: "赛前准备照片", link: "/join-us" },
+  { image: galleryImage("aic-code-3"), alt: "程序联调照片", link: "/join-us" },
+  { image: galleryImage("barbecue"), alt: "户外团建照片", link: "/join-us" },
 ];
 
 const footerLinks = [
   { title: "首页", link: "/" },
-  { title: "关于实验室", link: "/demo/" },
-  { title: "成员名录", link: "/demo/members-list" },
   { title: "资源库", link: "/demo/resources/" },
   { title: "加入我们", link: "/join-us" },
 ];

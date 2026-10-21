@@ -2,8 +2,8 @@
   <MemberProfile v-if="member && member.name" :member="member" />
   <div v-else class="mp-not-found">
     <h1>未找到该成员信息</h1>
-    <p>请检查链接是否正确，或返回研究队伍首页查看。</p>
-    <a href="/demo/members-list.html">返回研究队伍</a>
+    <p>请检查链接是否正确，或返回加入我们页面查看。</p>
+    <a href="/join-us.html">返回加入我们</a>
   </div>
 </template>
 

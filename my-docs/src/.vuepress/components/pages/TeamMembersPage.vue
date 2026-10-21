@@ -1,7 +1,7 @@
 <template>
   <div class="team-directory">
     <section class="team-hero">
-      <img class="team-hero-image" src="/images/main_img/hhu-bridge.png" alt="研究队伍横幅背景" />
+      <img class="team-hero-image" src="/images/main_img/hhu-bridge.png" alt="研究队伍横幅背景" width="1924" height="669" fetchpriority="high" decoding="async" />
       <div class="team-hero-mask"></div>
       <div class="team-hero-content">
         <p class="team-hero-kicker">研究队伍</p>
@@ -64,7 +64,7 @@
             >
               <a class="team-member-link" :href="member.link">
                 <div class="team-member-avatar">
-                  <img v-if="member.badge && (member.badge.includes('/') || member.badge.includes('.'))" :src="member.badge" :alt="member.name" />
+                  <img v-if="member.badge && (member.badge.includes('/') || member.badge.includes('.'))" :src="member.badge" :alt="member.name" loading="lazy" decoding="async" />
                   <span v-else-if="member.badge">{{ member.badge }}</span>
                 </div>
                 <div class="team-member-body">

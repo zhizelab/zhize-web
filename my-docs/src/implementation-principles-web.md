@@ -20,7 +20,7 @@ icon: laptop-code
 - 语言：`TypeScript`
 - 打包与开发：`Vite`
 - 图表：`echarts + echarts-wordcloud`
-- 手势识别：`handtrackjs`
+- 手势识别：按需加载 HandTrack 浏览器脚本
 
 ### 1.2 全局功能是如何注入到所有页面的
 
@@ -95,7 +95,7 @@ icon: laptop-code
 ### 3.1 启动流程
 
 1. 点“开启”按钮
-2. 动态加载 `handtrackjs` 模型（首次较慢）
+2. 用户点击开启后动态加载 HandTrack 脚本和模型（首次较慢）
 3. 申请摄像头权限 `getUserMedia`
 4. 视频就绪后进入识别循环 `runGestureLoop()`
 
@@ -170,7 +170,8 @@ icon: laptop-code
 
 ### 4.4 请求模型方式
 
-- 接口：`https://api.deepseek.com/chat/completions`
+- 前端只请求自有后端代理（默认 `/api/ai/chat`）
+- 后端再调用 DeepSeek `chat/completions` 接口，并在服务端保存 API Key
 - 模型：`deepseek-chat`
 - 自动讲解模式：要求“2~3 句、口语化、不要列表”
 - 手动问答模式：优先结合当前页面再给建议
@@ -186,12 +187,7 @@ icon: laptop-code
 
 ### 4.6 当前最需要注意的问题
 
-`AI_API_KEY` 现在写死在前端源码里，这在生产环境是不安全的：
-
-- 打包后用户可在浏览器里看到 key
-- 可能被盗用并产生费用
-
-正确做法是：前端只请求你自己的后端，由后端安全持有和转发 API Key。
+AI 请求现在统一走后端代理，前端源码和构建产物不再保存 API Key。后端需要提供兼容 OpenAI Chat Completions 请求体和响应体的 `/ai/chat` 接口；开发环境可通过 Vite 的 `/api` 代理访问它。
 
 ---
 

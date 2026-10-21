@@ -129,6 +129,8 @@ const resolveUrl = (path: string, query?: Record<string, string | number | boole
   return `${getApiBase()}${normalizedPath}${toQueryString(query)}`;
 };
 
+const REQUEST_TIMEOUT_MS = 20_000;
+
 export const requestApi = async <T>(
   path: string,
   options: RequestOptions = {},
@@ -148,16 +150,26 @@ export const requestApi = async <T>(
   }
 
   let response: Response;
+  const requestController = new AbortController();
+  const timeoutId = setTimeout(() => requestController.abort(), REQUEST_TIMEOUT_MS);
+  const abortRequest = (): void => requestController.abort();
+  if (signal) {
+    if (signal.aborted) requestController.abort();
+    else signal.addEventListener("abort", abortRequest, { once: true });
+  }
   try {
     response = await fetch(url, {
       method,
       headers,
       body: finalBody,
-      signal,
+      signal: requestController.signal,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "网络请求失败";
     throw new Error(`接口请求失败: ${message}`);
+  } finally {
+    clearTimeout(timeoutId);
+    signal?.removeEventListener("abort", abortRequest);
   }
 
   let payload: unknown;

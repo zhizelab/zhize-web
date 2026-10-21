@@ -10,8 +10,8 @@ id: shipengfei
 name: 史朋飞
 rank: 教授、博士生导师
 role: 教授/博导
-avatar: /images/portfolio_img/teacher_temp.png
-photo: /images/portfolio_img/teacher_temp.png
+avatar: /images/teacher-photo/shipengfei-removebg.png
+photo: /images/teacher-photo/shipengfei-removebg.png
 shortBio: 主要从事人工智能、机器视觉、智能机器人、嵌入式系统、软硬件系统、智能体、软件开发等研究
 researchAreas:
   - 人工智能

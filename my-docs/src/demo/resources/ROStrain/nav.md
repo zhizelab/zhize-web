@@ -58,4 +58,4 @@ roslaunch armbot_nav armbot_gazebo.launch
 roslaunch armbot_nav armbot_offline_nav.launch
 ```
 
-更新日期：2025年9月22日
+更新日期：2026年10月18日

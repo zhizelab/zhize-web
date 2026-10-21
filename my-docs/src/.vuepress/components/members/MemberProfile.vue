@@ -4,7 +4,7 @@
     <section class="mp-hero">
       <div class="mp-hero-card">
         <div class="mp-hero-photo">
-          <img :src="member.photo" :alt="member.name" />
+          <img :src="member.photo" :alt="member.name" decoding="async" />
         </div>
         <div class="mp-hero-info">
           <h1 class="mp-hero-name">{{ member.name }}</h1>
@@ -70,7 +70,7 @@
 
     <!-- 返回按钮 -->
     <div class="mp-back">
-      <a href="/demo/members-list.html" class="mp-back-btn">← 返回研究队伍</a>
+      <a href="/join-us.html" class="mp-back-btn">← 返回加入我们</a>
     </div>
   </div>
 </template>

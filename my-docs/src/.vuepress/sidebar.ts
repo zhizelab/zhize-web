@@ -2,65 +2,35 @@ import { sidebar } from "vuepress-theme-hope";
 
 export default sidebar({
   "/": [
-    "",
-    "portfolio",
-    "join-us",
+    { text: "首页", icon: "house", link: "/" },
+    { text: "负责老师", icon: "graduation-cap", link: "portfolio" },
+    { text: "成果展示", icon: "trophy", link: "demo/success" },
     {
-      text: "关于实验室",
-      icon: "laptop-code",
-      prefix: "demo/",
-      link: "demo/",
+      text: "资源库",
+      icon: "folder-tree",
+      prefix: "demo/resources/",
+      link: "demo/resources/",
+      collapsible: true,
+      expanded: false,
       children: [
         {
-          text: "研究队伍",
-          icon: "users",
-          link: "members-list",
-          
-        },
-        {
-          text: "成果展示",
-          icon: "trophy",
-          link: "success",
-        },
-        {
-          text: "资源库",
-          icon: "folder-tree",
-          prefix: "resources/",
-          link: "resources/",
+          text: "ROS培训",
+          icon: "robot",
+          prefix: "ROStrain/",
+          link: "ROStrain/",
           collapsible: true,
           expanded: false,
           children: [
-            {
-              text: "ROS培训",
-              icon: "robot",
-              prefix: "ROStrain/",
-              link: "ROStrain/",
-              collapsible: true,
-              expanded: false,
-              children: [
-                "environment",
-                "nav",
-                "imageProcessing",
-                "visionTraining",
-              ],
-            },
-            "lab-point-cloud-detail/lab-point-cloud-detail",
-            "hardware-training",
-            "machine-learning-training",
+            "environment",
+            "nav",
+            "imageProcessing",
+            "visionTraining",
           ],
-        }
+        },
+        "hardware-training",
+        "machine-learning-training",
       ],
     },
-    {
-      text: "文档",
-      icon: "book",
-      prefix: "guide/",
-      children: "structure",
-    },
-    {
-      text: "幻灯片",
-      icon: "person-chalkboard",
-      link: "https://ecosystem.vuejs.press/zh/plugins/markdown/revealjs/demo.html",
-    },
+    { text: "加入我们", icon: "user-plus", link: "join-us" },
   ],
 });

@@ -45,7 +45,7 @@ export const allTeachers: TeacherCard[] = [
     "name": "张卓",
     "title": "实验中心副主任、工会主席",
     "role": "实验室创建者与负责人",
-    "avatar": "/images/portfolio_img/teacher_temp.png",
+    "avatar": "/images/teacher-photo/zhangzhuo-removebg.png",
     "shortBio": "主要从事仿生物视觉的目标检测理论及应用、智能视觉物联网理论与应用研究。",
     "researchAreas": [
       "仿生物视觉的目标检测理论及应用",
@@ -72,7 +72,7 @@ export const allTeachers: TeacherCard[] = [
     "name": "史朋飞",
     "title": "教授、博士生导师",
     "role": "教授/博导",
-    "avatar": "/images/portfolio_img/teacher_temp.png",
+    "avatar": "/images/teacher-photo/shipengfei-removebg.png",
     "shortBio": "主要从事人工智能、机器视觉、智能机器人、嵌入式系统、软硬件系统、智能体、软件开发等研究",
     "researchAreas": [
       "人工智能",

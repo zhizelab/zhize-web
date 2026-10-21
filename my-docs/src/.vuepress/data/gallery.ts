@@ -8,13 +8,13 @@ export interface GalleryPhoto {
 }
 
 export const galleryPhotos: GalleryPhoto[] = [
-  { id: "aic-all", src: "/images/imgs/AIC_totot.jpg", title: "人工智能算法精英大赛团队合影", caption: "团队与指导教师在赛场留影", category: "团队合影", featured: true },
+  { id: "fwwb-chengdu", src: "/images/imgs/fwwb_chengdu.jpg", title: "服务外包创新创业大赛 · 成都", caption: "参赛成员赛场合影", category: "团队合影", featured: true },
   { id: "aic-team", src: "/images/imgs/AIC_tot.jpg", title: "人工智能算法精英大赛参赛团队", caption: "参赛成员合影", category: "团队合影", featured: true },
   { id: "fwwb-nanjing", src: "/images/imgs/fwwb_nanjing_tot.jpg", title: "服务外包创新创业大赛 · 南京", caption: "参赛团队集体合影", category: "团队合影", featured: true },
   { id: "iot-team-all", src: "/images/imgs/IOT_hjc_hff_tot.jpg", title: "全国大学生物联网设计竞赛团队", caption: "参赛团队在赛场合影", category: "团队合影", featured: true },
   { id: "team-building", src: "/images/imgs/tj_tot.jpg", title: "实验室团建", caption: "成员户外团建合影", category: "团队合影", featured: true },
   { id: "iot-team", src: "/images/imgs/IOT_hff_hjc_tot.jpg", title: "物联网设计竞赛参赛成员", caption: "赛场团队合影", category: "团队合影", featured: true },
-  { id: "fwwb-chengdu", src: "/images/imgs/fwwb_chengdu.jpg", title: "服务外包创新创业大赛 · 成都", caption: "参赛成员赛场合影", category: "团队合影", featured: true },
+  { id: "aic-all", src: "/images/imgs/AIC_totot.jpg", title: "人工智能算法精英大赛团队合影", caption: "团队与指导教师在赛场留影", category: "团队合影", featured: true },
   { id: "iot-award", src: "/images/imgs/IOT_hff_ry.jpg", title: "物联网设计竞赛获奖留影", caption: "成员在全国总决赛现场", category: "竞赛现场" },
   { id: "iot-demo", src: "/images/imgs/IOT_hff.jpg", title: "物联网作品现场展示", caption: "团队进行作品演示与答辩", category: "竞赛现场" },
   { id: "aic-award", src: "/images/imgs/AIC_hff.jpg", title: "竞赛颁奖现场", caption: "成员在颁奖仪式现场留影", category: "竞赛现场" },

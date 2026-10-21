@@ -4,16 +4,22 @@ import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
 
 export default hopeTheme({
-  hostname: "https://vuepress-theme-hope-docs-demo.netlify.app",
+  hostname: "https://zhizelab.github.io",
 
-  author: {
-    name: "yuanzhe and xyls999",
-    url: "https://mister-hope.com",
-  },
+  author: [
+    {
+      name: "yuanzhe",
+      url: "https://yuanzhechn.github.io/",
+    },
+    {
+      name: "xyls999",
+      url: "https://github.com/xyls999/",
+    },
+  ],
 
   logo: "/images/logos/zhizelab_logo_ss.png",
 
-  repo: "zhizelab",
+  repo: "zhizelab/zhize-web",
 
   docsDir: "src",
 
@@ -138,6 +144,11 @@ export default hopeTheme({
 
   // 在这里配置主题提供的插件
   plugins: {
+    // 已移除关于实验室的 /demo/ 根页面，保留成果展示和资源库子页面
+    catalog: {
+      exclude: [/^\/demo\/$/],
+    },
+
     // 注意: 仅用于测试! 你必须自行生成并在生产环境中使用自己的评论服务
     // 若要评论，放开此处注释
     // comment: {

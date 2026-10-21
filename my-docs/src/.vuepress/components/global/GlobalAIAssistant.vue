@@ -90,9 +90,13 @@ type OpenAIChatResponse = {
 };
 
 const AI_PROVIDER_LABEL = "DeepSeek";
-const AI_ENDPOINT = "https://api.deepseek.com/chat/completions";
-const AI_MODEL = "deepseek-chat";
-const AI_API_KEY = "sk-4daa9aef3ec84dd1a42a68d887f6810d";
+// API keys must stay on the server. The browser talks to our own proxy instead.
+const getDefaultAiEndpoint = (): string => {
+  if (typeof window === "undefined" || window.location.port === "4399") return "/api/ai/chat";
+  return `http://${window.location.hostname}:8080/ai/chat`;
+};
+const AI_ENDPOINT = (import.meta.env.VITE_AI_ENDPOINT || getDefaultAiEndpoint()).trim();
+const AI_MODEL = (import.meta.env.VITE_AI_MODEL || "deepseek-chat").trim();
 
 const isClient = typeof window !== "undefined" && typeof document !== "undefined";
 const page = usePageData();
@@ -119,8 +123,10 @@ let nextMessageId = 2;
 let lastExplainedPath = "";
 let activeRequestToken = 0;
 let autoDialogTimer: number | null = null;
+let explanationTimer: number | null = null;
+let activeRequestController: AbortController | null = null;
 
-const hasConfiguredApiKey = (): boolean => Boolean(normalizeText(AI_API_KEY));
+const hasConfiguredAiEndpoint = (): boolean => Boolean(normalizeText(AI_ENDPOINT));
 
 const toggleOpen = (): void => {
   isOpen.value = !isOpen.value;
@@ -178,6 +184,23 @@ const openAutoDialog = (text: string): void => {
 
 const handleBeforeUnload = (): void => {
   clearAutoDialogTimer();
+};
+
+const clearExplanationTimer = (): void => {
+  if (explanationTimer !== null) {
+    window.clearTimeout(explanationTimer);
+    explanationTimer = null;
+  }
+};
+
+const schedulePageExplanation = (path: string, force = false): void => {
+  if (!isClient || !path) return;
+  clearExplanationTimer();
+  // 让页面先完成首屏绘制，再请求 AI，避免自动讲解阻塞刚打开的页面。
+  explanationTimer = window.setTimeout(() => {
+    explanationTimer = null;
+    void explainPage(path, force);
+  }, 1200);
 };
 
 const addMessage = (role: ChatRole, text: string, kind: ChatKind): void => {
@@ -266,7 +289,7 @@ const parseAssistantContent = (content: unknown): string => {
   return "";
 };
 
-const requestAssistantOnce = async (userPrompt: string, mode: ChatKind): Promise<string> => {
+const requestAssistantOnce = async (userPrompt: string, mode: ChatKind, signal: AbortSignal): Promise<string> => {
   const pageContext = buildPageContext();
   const recentConversation: OpenAIMessage[] = messages.value
     .slice(-8)
@@ -286,8 +309,8 @@ const requestAssistantOnce = async (userPrompt: string, mode: ChatKind): Promise
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${AI_API_KEY}`,
     },
+    signal,
     body: JSON.stringify({
       model: AI_MODEL,
       temperature: 0.3,
@@ -314,17 +337,24 @@ const requestAssistantOnce = async (userPrompt: string, mode: ChatKind): Promise
 };
 
 const requestAssistant = async (userPrompt: string, mode: ChatKind): Promise<string> => {
-  if (!hasConfiguredApiKey()) {
-    throw new Error("当前未在代码中配置 API Key。");
+  if (!hasConfiguredAiEndpoint()) {
+    throw new Error("当前未配置 AI 后端代理地址。");
   }
-  return requestAssistantOnce(userPrompt, mode);
+  activeRequestController?.abort();
+  const controller = new AbortController();
+  activeRequestController = controller;
+  try {
+    return await requestAssistantOnce(userPrompt, mode, controller.signal);
+  } finally {
+    if (activeRequestController === controller) activeRequestController = null;
+  }
 };
 
 const explainPage = async (path: string, force = false): Promise<void> => {
   if (!isClient || !path) return;
   if (!force && path === lastExplainedPath) return;
-  if (!hasConfiguredApiKey()) {
-    statusText.value = "机器人未配置 API Key（仅支持代码内配置）。";
+  if (!hasConfiguredAiEndpoint()) {
+    statusText.value = "机器人未配置 AI 后端代理。";
     return;
   }
 
@@ -347,6 +377,7 @@ const explainPage = async (path: string, force = false): Promise<void> => {
     lastExplainedPath = path;
     statusText.value = "已完成当前页面讲解。";
   } catch (error) {
+    if (requestToken !== activeRequestToken) return;
     const message = error instanceof Error ? error.message : "自动讲解失败。";
     statusText.value = `自动讲解失败：${message}`;
     addMessage("assistant", `自动讲解失败：${message}`, "auto");
@@ -361,9 +392,9 @@ const sendManualMessage = async (): Promise<void> => {
   const question = normalizeText(userInput.value);
   if (!question) return;
 
-  if (!hasConfiguredApiKey()) {
-    statusText.value = "当前站点未开放页面设置 API Key。";
-    addMessage("assistant", "当前站点不支持页面设置 API Key，请联系管理员在代码中配置。", "manual");
+  if (!hasConfiguredAiEndpoint()) {
+    statusText.value = "当前站点未配置 AI 后端代理。";
+    addMessage("assistant", "当前站点暂未配置 AI 后端代理，请联系管理员。", "manual");
     return;
   }
 
@@ -382,6 +413,7 @@ const sendManualMessage = async (): Promise<void> => {
     addMessage("assistant", answer, "manual");
     statusText.value = "回答完成。";
   } catch (error) {
+    if (requestToken !== activeRequestToken) return;
     const message = error instanceof Error ? error.message : "回答失败。";
     statusText.value = `回答失败：${message}`;
     addMessage("assistant", `回答失败：${message}`, "manual");
@@ -404,7 +436,7 @@ watch(
   () => page.value.path,
   (path) => {
     if (!isClient || !path) return;
-    void explainPage(path);
+    schedulePageExplanation(path);
   },
 );
 
@@ -413,19 +445,23 @@ onMounted(() => {
   window.addEventListener("beforeunload", handleBeforeUnload);
 
   const currentPath = page.value.path || window.location.pathname;
-  if (!hasConfiguredApiKey()) {
-    statusText.value = "机器人未配置 API Key（仅支持代码内配置）。";
+  if (!hasConfiguredAiEndpoint()) {
+    statusText.value = "机器人未配置 AI 后端代理。";
     return;
   }
 
   statusText.value = `已连接 ${AI_PROVIDER_LABEL}，正在准备页面讲解。`;
-  void explainPage(currentPath, true);
+  schedulePageExplanation(currentPath, true);
 });
 
 onBeforeUnmount(() => {
   if (!isClient) return;
   window.removeEventListener("beforeunload", handleBeforeUnload);
+  activeRequestToken += 1;
+  activeRequestController?.abort();
+  activeRequestController = null;
   clearAutoDialogTimer();
+  clearExplanationTimer();
 });
 </script>
 

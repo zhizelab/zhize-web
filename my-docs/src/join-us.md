@@ -1,6 +1,8 @@
 ---
 title: 加入我们
 icon: user-plus
+date: 2026-10-18
+manualUpdated: 2026-10-18
 ---
 
 <!-- 
@@ -70,36 +72,10 @@ icon: user-plus
 
 ---
 
-## 🌟 我们的故事与瞬间
+## 团队足迹
 
-<!-- 接口一：团队活动相册 (多图网格布局) -->
-<!-- 替换下面的 src 链接为您自己的图片 -->
-<div class="team-gallery">
-  <div class="gallery-item">
-    <img src="/images/join-us_img/team_building_1.jpg" alt="团建照片 1">
-    <div class="gallery-item-caption">团建</div>
-  </div>
-  <div class="gallery-item">
-    <img src="/images/join-us_img/team_building_2.jpg" alt="团建照片 2">
-    <div class="gallery-item-caption">团建</div>
-  </div>
-  <div class="gallery-item">
-    <img src="/images/join-us_img/team_building_3.jpg" alt="团建照片 3">
-    <div class="gallery-item-caption">团建</div>
-  </div>
-  <div class="gallery-item">
-    <img src="/images/join-us_img/2025_AIC_group_total.jpg" alt="算法精英赛合影">
-    <div class="gallery-item-caption">2025年算法精英赛全国总决赛（江阴）</div>
-  </div>
-</div>
+<TeamFootprints />
 
 ---
 
-##  实验室环境
-我们已加入实验室三维点云环境（Gaussian Splat + PLY），可用于新成员熟悉空间布局、设备位置和任务演示。
-
-- 点云详情页：[`实验室环境点云详情`](/demo/resources/ROStrain/lab-point-cloud-detail.html)
-- 3D 点云场景（建议新开页）：<a href="/zz_lab-c3dcloud/index.html" target="_blank" rel="noopener noreferrer">打开实验室 3D 点云场景</a>
-
 ### 招生qq群：963390856
-招生说明 PDF：[`点击查看《智泽实验室2025招生说明》`](/pdf/智泽实验室2025招生说明.pdf)

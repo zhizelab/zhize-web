@@ -4,7 +4,7 @@
     <section class="tp-hero">
       <div class="tp-hero-card">
         <div class="tp-hero-photo">
-          <img :src="teacher.photo" :alt="teacher.name" />
+          <img :class="{ 'tp-photo--compact': teacher.id === 'shipengfei' }" :src="teacher.photo" :alt="teacher.name" decoding="async" />
         </div>
         <div class="tp-hero-info">
           <h1 class="tp-hero-name">{{ teacher.name }}</h1>
@@ -159,6 +159,13 @@ const formattedBio = computed(() => {
   height: 100%;
   object-fit: cover;
   object-position: center top;
+}
+
+.tp-hero-photo img.tp-photo--compact {
+  object-fit: contain;
+  object-position: center bottom;
+  transform: scale(0.9);
+  transform-origin: center bottom;
 }
 
 .tp-hero-info {

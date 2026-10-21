@@ -214,43 +214,6 @@
   }
 }
 
-.lab-home .research-tag {
-  position: absolute;
-  top: 0.7rem;
-  left: 0.7rem;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.18rem 0.56rem;
-  border-radius: 999px;
-  border: 1px solid rgba(182, 220, 255, 0.42);
-  background: rgba(6, 19, 38, 0.6);
-  color: #d3e9ff;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.lab-home .research-title {
-  position: absolute;
-  left: 0.8rem;
-  right: 0.8rem;
-  bottom: 2.9rem;
-  color: #f4f9ff;
-  font-size: 1rem;
-  font-weight: 760;
-}
-
-.lab-home .research-desc {
-  position: absolute;
-  left: 0.8rem;
-  right: 0.8rem;
-  bottom: 0.8rem;
-  margin: 0;
-  color: rgba(228, 241, 255, 0.9);
-  font-size: 0.82rem;
-  line-height: 1.45;
-}
-
 .lab-home .activity-timeline {
   padding: 1rem 1rem 0.8rem;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 248, 255, 0.95) 100%);
@@ -340,18 +303,6 @@
     width: 100%;
     height: 220px;
     object-fit: cover;
-  }
-
-  span {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 0.56rem 0.7rem;
-    background: linear-gradient(180deg, rgba(8, 19, 41, 0), rgba(8, 19, 41, 0.78));
-    color: #f3f9ff;
-    font-size: 0.9rem;
-    font-weight: 700;
   }
 
   &:hover {

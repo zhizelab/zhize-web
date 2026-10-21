@@ -1,19 +1,21 @@
-import { onBeforeUnmount, onMounted } from "vue";
+import { defineAsyncComponent, onBeforeUnmount, onMounted } from "vue";
 import { defineClientConfig } from "vuepress/client";
 
-import LabHomePage from "./components/pages/LabHomePage.vue";
-import TeamMembersPage from "./components/pages/TeamMembersPage.vue";
-import SuccessShowcase from "./components/pages/SuccessShowcase.vue";
-import GlobalGestureControl from "./components/global/GlobalGestureControl.vue";
-import GlobalAIAssistant from "./components/global/GlobalAIAssistant.vue";
-import VisitorDashboard from "./components/pages/VisitorDashboard.vue";
-import TeachersShowcase from "./components/teachers/TeachersShowcase.vue";
-import TeacherProfile from "./components/teachers/TeacherProfile.vue";
-import TeacherProfileLoader from "./components/teachers/TeacherProfileLoader.vue";
-import MemberProfile from "./components/members/MemberProfile.vue";
-import MemberProfileLoader from "./components/members/MemberProfileLoader.vue";
-import GlobalUserAccess from "./components/global/GlobalUserAccess.vue";
-import GlobalMemberMarkdownSync from "./components/global/GlobalMemberMarkdownSync.vue";
+// 非核心组件按需加载，避免把所有页面和交互代码放进首屏 bundle。
+const GlobalUserAccess = defineAsyncComponent(() => import("./components/global/GlobalUserAccess.vue"));
+const GlobalGestureControl = defineAsyncComponent(() => import("./components/global/GlobalGestureControl.vue"));
+const GlobalAIAssistant = defineAsyncComponent(() => import("./components/global/GlobalAIAssistant.vue"));
+const GlobalMemberMarkdownSync = defineAsyncComponent(() => import("./components/global/GlobalMemberMarkdownSync.vue"));
+const LabHomePage = defineAsyncComponent(() => import("./components/pages/LabHomePage.vue"));
+const TeamMembersPage = defineAsyncComponent(() => import("./components/pages/TeamMembersPage.vue"));
+const SuccessShowcase = defineAsyncComponent(() => import("./components/pages/SuccessShowcase.vue"));
+const TeamFootprints = defineAsyncComponent(() => import("./components/pages/TeamFootprints.vue"));
+const VisitorDashboard = defineAsyncComponent(() => import("./components/pages/VisitorDashboard.vue"));
+const TeachersShowcase = defineAsyncComponent(() => import("./components/teachers/TeachersShowcase.vue"));
+const TeacherProfile = defineAsyncComponent(() => import("./components/teachers/TeacherProfile.vue"));
+const TeacherProfileLoader = defineAsyncComponent(() => import("./components/teachers/TeacherProfileLoader.vue"));
+const MemberProfile = defineAsyncComponent(() => import("./components/members/MemberProfile.vue"));
+const MemberProfileLoader = defineAsyncComponent(() => import("./components/members/MemberProfileLoader.vue"));
 
 export default defineClientConfig({
   rootComponents: [GlobalUserAccess, GlobalGestureControl, GlobalAIAssistant, GlobalMemberMarkdownSync],
@@ -23,6 +25,7 @@ export default defineClientConfig({
     app.component("LabHomePage", LabHomePage);
     app.component("TeamMembersPage", TeamMembersPage);
     app.component("SuccessShowcase", SuccessShowcase);
+    app.component("TeamFootprints", TeamFootprints);
     app.component("TeachersShowcase", TeachersShowcase);
     app.component("TeacherProfile", TeacherProfile);
     app.component("TeacherProfileLoader", TeacherProfileLoader);

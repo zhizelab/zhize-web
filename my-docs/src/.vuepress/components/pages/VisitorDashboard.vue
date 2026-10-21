@@ -106,7 +106,9 @@ import { ref, onBeforeUnmount, onMounted, computed, nextTick } from 'vue';
 import { initAuthSession, validateLogin } from "../../utils/authSession";
 
 // SSR 安全：只有在 onMounted 后才动态导入 echarts
-let echarts: any = null;
+type EChartsModule = typeof import("echarts");
+let echarts: EChartsModule | null = null;
+let chartLibrariesPromise: Promise<EChartsModule> | null = null;
 
 // 新增：控制客户端渲染的状态
 const isMounted = ref(false);
@@ -123,6 +125,23 @@ const allRecords = ref<VisitorRecord[]>([]);
 const viewRecords = ref<VisitorRecord[]>([]);
 let chartInstances: any[] = [];
 let resizeListenerBound = false;
+let resizeRaf = 0;
+
+const loadChartLibraries = async (): Promise<EChartsModule> => {
+  if (echarts) return echarts;
+
+  chartLibrariesPromise ??= Promise.all([import("echarts"), import("echarts-wordcloud")])
+    .then(([echartsModule]) => {
+      echarts = echartsModule;
+      return echartsModule;
+    })
+    .catch((error) => {
+      chartLibrariesPromise = null;
+      throw error;
+    });
+
+  return chartLibrariesPromise;
+};
 
 const pageTitleMap: Record<string, string> = {
   '/': '首页', '/about': '关于我们', '/contact': '联系方式',
@@ -163,10 +182,13 @@ const recordCurrentVisit = async () => {
 
   const device = getDeviceInfo();
   let ip = '127.0.0.1';
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), 1500);
   try {
-    const res = await fetch('https://api.ipify.org?format=json');
+    const res = await fetch('https://api.ipify.org?format=json', { signal: controller.signal });
     if (res.ok) ip = (await res.json()).ip;
   } catch (e) { /* ignore */ }
+  finally { window.clearTimeout(timeoutId); }
 
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
   records.push({ time: new Date().toISOString(), ip, path: currentPath, ...device });
@@ -238,7 +260,11 @@ const initCharts = () => {
 const onTimeRangeChange = () => { filterData(); initCharts(); };
 
 const resizeCharts = () => {
-  chartInstances.forEach((chart) => chart.resize());
+  if (resizeRaf) return;
+  resizeRaf = window.requestAnimationFrame(() => {
+    resizeRaf = 0;
+    chartInstances.forEach((chart) => chart.resize());
+  });
 };
 
 const bootstrapDashboard = async () => {
@@ -274,9 +300,7 @@ const retryAuth = async () => {
   const ok = await runAuthCheck();
   if (!ok) return;
   try {
-    const echartsModule = await import('echarts');
-    echarts = echartsModule;
-    await import('echarts-wordcloud');
+    await loadChartLibraries();
   } catch (e) {
     console.error("Failed to load charting libraries:", e);
     return;
@@ -297,9 +321,7 @@ onMounted(async () => {
   if (!authOk) return;
 
   try {
-    const echartsModule = await import('echarts');
-    echarts = echartsModule; // 赋值给全局变量
-    await import('echarts-wordcloud');
+    await loadChartLibraries();
   } catch(e) {
     console.error("Failed to load charting libraries:", e);
     return; // 如果库加载失败，则不继续执行
@@ -309,6 +331,10 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  if (resizeRaf) {
+    window.cancelAnimationFrame(resizeRaf);
+    resizeRaf = 0;
+  }
   chartInstances.forEach((chart) => chart.dispose());
   chartInstances = [];
   if (typeof window !== 'undefined' && resizeListenerBound) {

@@ -27,7 +27,7 @@ export default defineUserConfig({
 
   lang: "zh-CN",
   title: "河海大学智泽实验室",
-  description: "",
+  description: "河海大学智泽实验室，聚焦人工智能、机器人与工程实践。",
 
   head: [
     ["link", { rel: "icon", href: "/images/logos/zhizelab_logo_ss.png" }],
@@ -35,6 +35,29 @@ export default defineUserConfig({
   ],
 
   theme,
+
+  // 允许页面用 frontmatter 明确指定“最后更新”日期，避免仅依赖历史 Git 提交时间。
+  plugins: [
+    {
+      name: "manual-page-updated-time",
+      extendsPage(page) {
+        const manualUpdated = page.frontmatter.manualUpdated;
+        if (!manualUpdated) return;
+
+        const updatedDate = manualUpdated instanceof Date
+          ? manualUpdated
+          : new Date(String(manualUpdated));
+        const updatedTime = updatedDate.getTime();
+        if (!Number.isFinite(updatedTime)) return;
+
+        const pageData = page.data as { git?: Record<string, unknown> };
+        pageData.git = {
+          ...pageData.git,
+          updatedTime,
+        };
+      },
+    },
+  ],
 
   clientConfigFile: path.resolve(__dirname, "./client.ts"),
 

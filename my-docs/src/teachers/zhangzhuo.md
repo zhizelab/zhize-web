@@ -10,8 +10,8 @@ id: zhangzhuo
 name: 张卓
 rank: 实验中心副主任、工会主席
 role: 实验室创建者与负责人
-avatar: /images/portfolio_img/teacher_temp.png
-photo: /images/portfolio_img/teacher_temp.png
+avatar: /images/teacher-photo/zhangzhuo-removebg.png
+photo: /images/teacher-photo/zhangzhuo-removebg.png
 shortBio: 主要从事仿生物视觉的目标检测理论及应用、智能视觉物联网理论与应用研究。
 researchAreas:
   - 仿生物视觉的目标检测理论及应用

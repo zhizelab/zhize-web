@@ -6,7 +6,7 @@
 
       <div class="sc-carousel-ui">
         <h2>🏆 竞赛获奖</h2>
-        <p>实验室成员在各类学科竞赛中的优异表现</p>
+        <p>实验室成员在各类竞赛中的优异表现</p>
         <a class="sc-details-link" href="#award-details">查看完整获奖名单 ↓</a>
       </div>
 
@@ -15,12 +15,12 @@
         ref="stageRef"
         :class="{ 'is-hovering': hoveredId !== null }"
       >
-        <div class="sc-carousel-ring sc-ring-landscape" :style="landscapeRingStyle">
+        <div class="sc-carousel-ring" :style="ringStyle">
           <div
-            v-for="(award, i) in landscapeAwards"
+            v-for="(award, i) in carouselAwards"
             :key="award.id"
-            class="sc-carousel-card sc-card-landscape"
-            :style="cardPositionStyle(i, landscapeAwards.length, 'landscape', 'outer')"
+            class="sc-carousel-card"
+            :style="cardPositionStyle(i, carouselAwards.length, award.orientation, award.id)"
             @mouseenter="onHover(award.id)"
             @mouseleave="onLeave"
           >
@@ -44,72 +44,19 @@
               </div>
               <div class="sc-carousel-card-back">
                 <h4>{{ award.title }}</h4>
-                <p class="sc-back-level">{{ award.level }}</p>
-                <p class="sc-back-meta">{{ award.teams[0].members || award.teams[0].teachers || "详见下方获奖详情" }}</p>
+                <p class="sc-back-level">{{ formatAwardLevel(award.level) }}</p>
+                <p
+                  v-if="award.teams[0].members || award.teams[0].teachers"
+                  class="sc-back-meta"
+                >
+                  {{ award.teams[0].members || award.teams[0].teachers }}
+                </p>
                 <p class="sc-back-meta">📅 {{ award.date }}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="sc-carousel-ring sc-ring-portrait" :style="portraitRingStyle">
-          <div
-            v-for="(award, i) in portraitAwards"
-            :key="award.id"
-            class="sc-carousel-card sc-card-portrait"
-            :style="cardPositionStyle(i, portraitAwards.length, 'portrait', 'inner')"
-            @mouseenter="onHover(award.id)"
-            @mouseleave="onLeave"
-          >
-            <div class="sc-carousel-card-inner" :class="{ 'is-hovered': hoveredId === award.id }">
-              <div class="sc-carousel-card-front">
-                <img :src="withBase(award.image)" :alt="award.title" draggable="false" />
-              </div>
-              <div class="sc-carousel-card-back">
-                <h4>{{ award.title }}</h4>
-                <p class="sc-back-level">{{ award.level }}</p>
-                <p class="sc-back-meta">{{ award.teams[0].members || award.teams[0].teachers || "详见下方获奖详情" }}</p>
-                <p class="sc-back-meta">📅 {{ award.date }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="sc-section sc-gallery-section">
-      <div class="sc-section-header">
-        <h2>团队足迹</h2>
-        <p>竞赛同行，也记录并肩成长的每一次相聚</p>
-      </div>
-
-      <div class="sc-featured-gallery">
-        <figure
-          v-for="(photo, index) in featuredPhotos"
-          :key="photo.id"
-          class="sc-featured-photo"
-          :class="{ 'is-leading': index === 0 }"
-        >
-          <img :src="withBase(photo.src)" :alt="photo.title" loading="lazy" />
-          <figcaption>
-            <strong>{{ photo.title }}</strong>
-            <span>{{ photo.caption }}</span>
-          </figcaption>
-        </figure>
-      </div>
-
-      <div class="sc-moments-heading">
-        <h3>竞赛现场与团队日常</h3>
-        <span>{{ momentPhotos.length }} 个片段</span>
-      </div>
-      <div class="sc-moments-grid">
-        <figure v-for="photo in momentPhotos" :key="photo.id" class="sc-moment-photo">
-          <img :src="withBase(photo.src)" :alt="photo.title" loading="lazy" />
-          <figcaption>
-            <strong>{{ photo.title }}</strong>
-            <span>{{ photo.caption }}</span>
-          </figcaption>
-        </figure>
       </div>
     </section>
 
@@ -119,18 +66,18 @@
         <p>按获奖时间排列 · 点击证书查看原图</p>
       </div>
       <div class="sc-award-grid">
-        <article v-for="award in awards" :key="award.id" class="sc-award-detail" :class="{ 'sc-award-collection': award.teams.length > 1 }">
+        <article v-for="award in sortedAwards" :key="award.id" class="sc-award-detail" :class="{ 'sc-award-collection': award.teams.length > 1 }">
           <a :href="withBase(award.image)" target="_blank" rel="noopener" class="sc-certificate-link" :aria-label="`查看${award.title}证书原图`">
             <img :src="withBase(award.image)" :alt="`${award.title} · ${award.level}`" loading="lazy" />
-            <span>查看证书原图 ↗</span>
+            <span>查看证书原图</span>
           </a>
           <div class="sc-award-info">
             <p class="sc-award-date">{{ award.date }}</p>
             <h3>{{ award.title }}</h3>
-            <p class="sc-award-level">{{ award.level }}</p>
+            <p class="sc-award-level">{{ formatAwardLevel(award.level) }}</p>
             <div class="sc-award-teams">
             <div v-for="(team, index) in award.teams" :key="index" class="sc-award-team">
-              <h4>{{ award.teams.length > 1 ? `${index + 1} · ` : "" }}{{ team.level }}</h4>
+              <h4>{{ award.teams.length > 1 ? `${index + 1} · ` : "" }}{{ formatAwardLevel(team.level) }}</h4>
               <p v-if="team.project">{{ team.project }}</p>
               <p v-if="team.members"><strong>获奖成员 / 单位：</strong>{{ team.members }}</p>
               <p v-if="team.teachers"><strong>指导教师：</strong>{{ team.teachers }}</p>
@@ -141,6 +88,8 @@
         </article>
       </div>
     </section>
+
+
 
     <!-- ===== 项目成果 ===== -->
     <section class="sc-section sc-alt">
@@ -166,11 +115,14 @@
           </div>
           <div class="sc-project-info">
             <h3>{{ project.title }}</h3>
-            <p class="sc-project-desc">{{ project.desc }}</p>
+            <p class="sc-project-desc">{{ project.overview }}</p>
+            <p class="sc-project-status"><strong>项目现状：</strong>{{ project.status }}</p>
+            <p class="sc-project-stack"><strong>技术栈：</strong>{{ project.stack }}</p>
             <div class="sc-project-tags">
               <span v-for="tag in project.tags" :key="tag">{{ tag }}</span>
             </div>
-            <p class="sc-project-year">{{ project.year }}</p>
+            <p class="sc-project-competitions"><strong>服务比赛：</strong>{{ project.competitions }}</p>
+            <p v-if="project.note" class="sc-project-note">{{ project.note }}</p>
           </div>
         </article>
       </div>
@@ -183,70 +135,96 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 
 import { withBase } from "vuepress/client";
 import { awards } from "../../data/awards";
-import { featuredPhotos, momentPhotos } from "../../data/gallery";
 
 const projects = [
-  { id: "proj-1", title: "智慧水利监测平台", desc: "基于物联网与深度学习的水利设施智能监测系统，实现水位、流量、水质等多维度数据的实时采集与异常预警。", tags: ["物联网", "深度学习", "水利"], year: "2024", cover: "" },
-  { id: "proj-2", title: "机器人视觉导航系统", desc: "基于 ROS 与 YOLO 的自主导航机器人，融合 SLAM 建图、视觉识别与路径规划，实现复杂室内环境下的自主巡航。", tags: ["ROS", "SLAM", "目标检测"], year: "2024", cover: "" },
-  { id: "proj-3", title: "实验室 3D 点云场景", desc: "基于 Gaussian Splat 技术构建的实验室高精度三维点云场景，支持 Web 端实时浏览与交互。", tags: ["3D Gaussian Splat", "点云", "WebGL"], year: "2025", cover: "/images/main_img/hhu-bridge.png" },
-  { id: "proj-4", title: "智能问答系统", desc: "基于大语言模型的领域知识问答系统，支持多轮对话与知识库检索。", tags: ["LLM", "RAG", "NLP"], year: "2024", cover: "" },
+  {
+    id: "patrol-robot",
+    title: "巡检无人车系统的设计及应用",
+    overview: "变电站巡检机器人利用激光导航定位、图像识别和高精测温等技术，实现设备状态全面感知与信息高效处理，可用于室外设备外观缺陷、表计读数、开关位置、设备测温和声音采集等巡检作业，辅助或代替人工完成设备巡检，提高巡检效率和质量。",
+    status: "已能完成基础巡检任务，团队正结合实际巡检场景，从底盘结构、运动方式、感知系统和控制系统架构等方面持续升级。",
+    stack: "机械设计、嵌入式软硬件设计、电路设计、底盘运动控制、强化学习、模型量化部署、前后端软件设计。",
+    competitions: "OpenHarmony AI 硬件开发者大赛、嵌入式芯片与系统设计大赛、物联网设计大赛、节能减排科技大赛、研华全国 AIoT 创新应用大赛、中国机器人大会。",
+    tags: ["巡检机器人", "变电站", "AIoT"],
+    cover: "/images/projects/patrol-robot-project.png",
+  },
+  {
+    id: "quadruped-robot",
+    title: "四足机器狗系统的设计及应用",
+    overview: "针对恶劣地形中单轮式机器人容易打滑失稳、越障爬坡能力不足，以及传统足式机器人长距离通行效率低、功耗高等问题，项目设计四足轮足机器人系统，融合轮式移动的高效性与腿式运动的越障性，具备平地高效行驶、复杂地形腿式越障和轮腿协同通过能力。",
+    status: "团队已完成前期方案论证与初步设计，在机械结构、电气系统、控制系统及控制方案等方面形成初步选型，正通过理论分析、仿真建模、测试和关键部件对比开展验证与优化。",
+    stack: "机械结构设计、嵌入式软硬件设计、电路设计、电机控制、传统运动控制、强化学习、模型量化加速。",
+    competitions: "中国软件杯、服务外包创新创业大赛、机甲大师赛。",
+    note: "把相关技术真正融合到一台四足轮足机器人上，完成从掌握知识到构建完整系统的跨越。",
+    tags: ["四足轮足机器人", "运动控制", "强化学习"],
+    cover: "/images/projects/quadruped-robot-project.png",
+  },
 ];
 
-/* ---------- 3D 转盘逻辑 ---------- */
+const awardDateValue = (date: string): number => {
+  const match = date.match(/(\d{4})\D+(\d{1,2})/);
+  return match ? Number(match[1]) * 100 + Number(match[2]) : 0;
+};
+
+const sortedAwards = computed(() =>
+  awards
+    .map((award, index) => ({ award, index }))
+    .sort((a, b) => awardDateValue(b.award.date) - awardDateValue(a.award.date) || a.index - b.index)
+    .map(({ award }) => award),
+);
+
+/* ---------- Carousel logic ---------- */
 const stageRef = ref<HTMLElement | null>(null);
 const rotation = ref(0);
 const hoveredId = ref<string | null>(null);
 let rafId = 0;
-const baseSpeed = 0.1;
+const baseSpeed = 0.045;
 
-const landscapeAwards = awards.filter((award) => award.orientation === "landscape");
-const portraitAwards = awards.filter((award) => award.orientation === "portrait");
+const carouselAwards = awards;
 
-/* ---- 视口自适应缩放 ---- */
+/* ---- Responsive sizing ---- */
 const viewportW = ref(1920);
-const scale = computed(() => Math.max(0.5, Math.min(1.5, viewportW.value / 1920)));
+const scale = computed(() => Math.max(0.5, Math.min(1, viewportW.value / 1440)));
 
-/* 卡片尺寸（随视口缩放） */
-const portraitW = computed(() => Math.round(260 * scale.value));
-const portraitH = computed(() => Math.round(340 * scale.value));
-const landscapeW = computed(() => Math.round(320 * scale.value));
-const landscapeH = computed(() => Math.round(230 * scale.value));
-
-const landscapeRadius = computed(() =>
-  Math.round(landscapeW.value / (2 * Math.tan(Math.PI / landscapeAwards.length)))
-);
-const portraitRadius = computed(() =>
-  Math.max(150 * scale.value, Math.round(portraitW.value / (2 * Math.tan(Math.PI / portraitAwards.length))))
+const landscapeW = computed(() => Math.round(176 * scale.value));
+const landscapeH = computed(() => Math.round(158 * scale.value));
+const portraitW = computed(() => Math.round(180 * scale.value));
+const portraitH = computed(() => Math.round(235 * scale.value));
+const carouselRadius = computed(() =>
+  Math.round(Math.max(landscapeW.value, portraitW.value) / (2 * Math.tan(Math.PI / carouselAwards.length)))
 );
 
-const landscapeRingStyle = computed(() => ({
+const ringStyle = computed(() => ({
   transform: `rotateY(${rotation.value}deg)`,
-}));
-const portraitRingStyle = computed(() => ({
-  transform: `rotateY(${-rotation.value * 1.35}deg)`,
 }));
 
 const cardPositionStyle = (
   index: number,
   count: number,
   orientation: "landscape" | "portrait",
-  ring: "outer" | "inner"
+  awardId: string
 ) => {
   const angle = (360 / count) * index;
-  const dims = orientation === "landscape"
-    ? { w: landscapeW.value, h: landscapeH.value }
-    : { w: portraitW.value, h: portraitH.value };
-  const radius = ring === "outer" ? landscapeRadius.value : portraitRadius.value;
-  const translateY = ring === "outer" ? 54 * scale.value : -34 * scale.value;
+  const baseWidth = orientation === "landscape" ? landscapeW.value : portraitW.value;
+  const baseHeight = orientation === "landscape" ? landscapeH.value : portraitH.value;
+  const hoverScale = hoveredId.value === awardId ? 1.24 : 1;
+  const hoverWidth = Math.round(baseWidth * 1.24);
+  const hoverHeight = Math.round(baseHeight * 1.24);
+  const width = Math.round(baseWidth * hoverScale);
+  const height = Math.round(baseHeight * hoverScale);
   return {
-    width: `${dims.w}px`,
-    height: `${dims.h}px`,
-    transform: `rotateY(${angle}deg) translateZ(${radius}px) translateY(${translateY}px)`,
-    marginTop: `${-dims.h / 2}px`,
-    marginLeft: `${-dims.w / 2}px`,
+    width: `${width}px`,
+    height: `${height}px`,
+    "--inner-width": `${hoverWidth}px`,
+    "--inner-height": `${hoverHeight}px`,
+    "--rest-scale": `${1 / 1.24}`,
+    transform: `rotateY(${angle}deg) translateZ(${carouselRadius.value}px)`,
+    marginTop: `${-height / 2}px`,
+    marginLeft: `${-width / 2}px`,
   };
 };
 
+const formatAwardLevel = (level: string): string =>
+  level.replace(/(?=(?:特等奖|一等奖|二等奖|三等奖|四等奖|五等奖|优秀组织奖))/g, "\n").trim();
 const animate = () => {
   if (hoveredId.value === null) {
     rotation.value += baseSpeed;
@@ -288,8 +266,8 @@ onUnmounted(() => {
 /* ========== 全屏 3D 转盘 ========== */
 .sc-carousel-fullscreen {
   position: relative;
-  width: calc(100vw - 24px);
-  margin-left: calc(-50vw + 50% + 12px);
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -384,21 +362,29 @@ onUnmounted(() => {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   cursor: pointer;
+  transition: width 0.35s ease, height 0.35s ease, margin 0.35s ease;
 }
 
 /* 卡片内层 —— 负责 hover 放大 */
 .sc-carousel-card-inner {
-  width: 100%;
-  height: 100%;
+  width: var(--inner-width, 100%);
+  height: var(--inner-height, 100%);
   position: relative;
   transform-style: preserve-3d;
+  transform: scale(var(--rest-scale, 1));
+  transform-origin: center;
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 0 8px 32px rgba(0,0,0,0.35);
 }
 
 .sc-carousel-card-inner.is-hovered {
-  transform: scale(1.16) translateZ(70px);
+  transform: scale(1.03) translateZ(22px);
   box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+
+.sc-carousel-card-inner.is-hovered .sc-carousel-card-front,
+.sc-carousel-card-inner.is-hovered .sc-carousel-card-back {
+  border-width: 3px;
 }
 
 /* 正面 */
@@ -493,19 +479,23 @@ onUnmounted(() => {
   pointer-events: none;
   backface-visibility: hidden;
   border: 2px solid rgba(201, 162, 39, 0.6);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .sc-carousel-card-inner.is-hovered .sc-carousel-card-back {
   opacity: 1;
   pointer-events: auto;
 }
-
 .sc-carousel-card-back h4 {
   font-size: 0.9rem;
   font-weight: 700;
   color: #ffd700;
   margin: 0 0 8px;
   line-height: 1.3;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .sc-back-level {
@@ -513,147 +503,48 @@ onUnmounted(() => {
   color: #ff7e5f;
   font-weight: 700;
   margin: 0 0 10px;
+  white-space: pre-line;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .sc-back-meta {
   font-size: 0.75rem;
   color: #ccc;
   margin: 0 0 4px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* ========== 团队照片 ========== */
-.sc-gallery-section {
-  max-width: 1320px;
-}
-
-.sc-featured-gallery {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: 230px;
-  gap: 16px;
-}
-
-.sc-featured-photo,
-.sc-moment-photo {
-  position: relative;
-  margin: 0;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #101b2d;
-}
-
-.sc-featured-photo.is-leading {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.sc-featured-photo:nth-child(6),
-.sc-featured-photo:nth-child(7) {
-  grid-column: span 2;
-}
-
-.sc-featured-photo img,
-.sc-moment-photo img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  transition: transform 0.45s ease;
-}
-
-.sc-featured-photo:hover img,
-.sc-moment-photo:hover img {
-  transform: scale(1.035);
-}
-
-.sc-featured-photo::after,
-.sc-moment-photo::after {
-  content: "";
-  position: absolute;
-  inset: 35% 0 0;
-  background: linear-gradient(transparent, rgba(4, 12, 26, 0.88));
-  pointer-events: none;
-}
-
-.sc-featured-photo figcaption,
-.sc-moment-photo figcaption {
-  position: absolute;
-  z-index: 1;
-  left: 18px;
-  right: 18px;
-  bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  color: #fff;
-}
-
-.sc-featured-photo figcaption strong,
-.sc-moment-photo figcaption strong {
-  font-size: 1rem;
-  line-height: 1.35;
-}
-
-.sc-featured-photo figcaption span,
-.sc-moment-photo figcaption span {
-  color: rgba(255, 255, 255, 0.76);
-  font-size: 0.82rem;
-}
-
-.sc-moments-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin: 48px 0 18px;
-  border-bottom: 1px solid #dce2eb;
-  padding-bottom: 12px;
-}
-
-.sc-moments-heading h3 {
-  margin: 0;
-  color: #1a1a1a;
-  font-size: 1.25rem;
-}
-
-.sc-moments-heading span {
-  color: #667085;
-  font-size: 0.85rem;
-}
-
-.sc-moments-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.sc-moment-photo {
-  aspect-ratio: 4 / 3;
-}
 
 /* ========== 可直接阅读的证书与名单 ========== */
 .sc-details-link { display: inline-block; margin-top: 18px; color: #f4d68b; }
-.sc-award-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
+.sc-awards-section { max-width: 2400px; }
+.sc-award-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: stretch; }
 .sc-award-collection { grid-column: 1 / -1; }
 .sc-award-collection .sc-award-teams { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
-.sc-award-detail { border: 1px solid #e1e5ee; border-radius: 16px; overflow: hidden; background: #fff; color: #1a1a1a; box-shadow: 0 4px 20px #1523400a; }
+.sc-award-detail { display: flex; flex-direction: column; border: 1px solid #e1e5ee; border-radius: 16px; overflow: hidden; background: #fff; color: #1a1a1a; box-shadow: 0 4px 20px #1523400a; }
 .sc-certificate-link { display: block; padding: 20px; background: #f0f2f7; text-align: center; }
 .sc-certificate-link img { display: block; width: 100%; height: 260px; object-fit: contain; }
 .sc-certificate-link span { display: inline-block; margin-top: 12px; font-size: .85rem; color: #405c94; }
-.sc-award-info { padding: 24px; }
+.sc-award-info { flex: 1; padding: 24px; }
 .sc-award-info h3 { margin: 8px 0 12px; font-size: 1.15rem; line-height: 1.5; }
 .sc-award-date { margin: 0; color: #667085; font-size: .85rem; }
-.sc-award-level { color: #a74418; font-weight: 700; }
+.sc-award-level { color: #a74418; font-weight: 700; white-space: pre-line; }
 .sc-award-team { border-top: 1px solid #edf0f5; margin-top: 16px; padding-top: 12px; }
-.sc-award-team h4 { margin: 0 0 8px; font-size: .95rem; }
+.sc-award-team h4 { margin: 0 0 8px; font-size: .95rem; white-space: pre-line; }
 .sc-award-team p { margin: 6px 0; line-height: 1.8; font-size: .9rem; overflow-wrap: anywhere; }
 .sc-award-team .sc-award-note { color: #667085; font-size: .8rem; }
 @media (max-width: 768px) { .sc-award-grid, .sc-award-collection .sc-award-teams { grid-template-columns: 1fr; } }
 
 /* ========== 项目成果 ========== */
 .sc-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 24px;
+  width: 50vw;
+  box-sizing: border-box;
+  max-width: 2400px;
+  margin: 0 0 0 calc(50% - 25vw);
+  padding: 60px 12px;
 }
 
 .sc-alt {
@@ -738,6 +629,27 @@ onUnmounted(() => {
   margin: 0 0 14px;
 }
 
+.sc-project-status,
+.sc-project-stack,
+.sc-project-competitions,
+.sc-project-note {
+  font-size: 0.86rem;
+  color: #555;
+  line-height: 1.65;
+  margin: 0 0 10px;
+}
+
+.sc-project-status strong,
+.sc-project-stack strong,
+.sc-project-competitions strong {
+  color: #2458a6;
+}
+
+.sc-project-note {
+  color: #687386;
+  font-style: italic;
+}
+
 .sc-project-tags {
   display: flex;
   flex-wrap: wrap;
@@ -764,44 +676,18 @@ onUnmounted(() => {
     margin-bottom: 8px;
   }
 
-  .sc-featured-gallery,
-  .sc-moments-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 180px;
-  }
-
-  .sc-featured-photo.is-leading,
-  .sc-featured-photo:nth-child(6),
-  .sc-featured-photo:nth-child(7) {
-    grid-column: span 2;
-  }
-
-  .sc-moment-photo {
-    aspect-ratio: auto;
-  }
 
   .sc-project-grid {
     grid-template-columns: 1fr;
   }
+
+  .sc-section {
+    width: calc(100% - 24px);
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 520px) {
-  .sc-featured-gallery,
-  .sc-moments-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .sc-featured-photo,
-  .sc-featured-photo.is-leading,
-  .sc-featured-photo:nth-child(6),
-  .sc-featured-photo:nth-child(7) {
-    grid-column: auto;
-    grid-row: auto;
-    height: 230px;
-  }
-
-  .sc-moment-photo {
-    height: 220px;
-  }
 }
+
 </style>
