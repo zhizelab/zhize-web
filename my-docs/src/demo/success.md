@@ -16,18 +16,18 @@ pageClass: success-showcase-page
 <SuccessShowcase />
 
 <style>
-.vp-page-title,
-.vp-breadcrumb,
-.vp-page-meta,
-.page-title,
-.breadcrumb,
-.page-meta {
+body:has(.success-showcase) .vp-page-title,
+body:has(.success-showcase) .vp-breadcrumb,
+body:has(.success-showcase) .vp-page-meta,
+body:has(.success-showcase) .page-title,
+body:has(.success-showcase) .breadcrumb,
+body:has(.success-showcase) .page-meta {
   display: none !important;
 }
-.vp-page,
-.page,
-.theme-hope-content,
-.page-content {
+body:has(.success-showcase) .vp-page,
+body:has(.success-showcase) .page,
+body:has(.success-showcase) .theme-hope-content,
+body:has(.success-showcase) .page-content {
   padding: 0 !important;
   margin: 0 !important;
   max-width: none !important;

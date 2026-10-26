@@ -196,7 +196,7 @@ git add .
 git commit -m "更新说明"
 git push -f https://github.com/zhizelab/zhizelab.github.io.git main   # 若报错可以先运行git branch -M master main(这取决于你运行git branch是哪个，是master的话会报错)，还有可能是没有开/关梯子的问题，关/开之后就好了，若还没好，重复几次
 # 如果上传不上去可以试试开全局模式 
-删掉上面git init的 .git （在dist目录下），（一定不要删除和my-docs同级别的那个.git）  # 因为这个.git会干扰外层.git
+删掉上面git init的 .git （在dist目录下，删不掉的话可以使用pnpm docs:build重新构建进行覆盖），（一定不要删除和my-docs同级别的那个.git）  # 因为这个.git会干扰外层.git
 ```
 
 然后需要等待几分钟就可以在 https://zhizelab.github.io/ 看到更新后的网页了，此时[setting-github pages](https://github.com/zhizelab/zhizelab.github.io/settings/pages)会有部署记录的
