@@ -1,5 +1,10 @@
 <template>
-  <TeacherProfile v-if="teacher && teacher.name" :teacher="teacher" />
+  <TeacherProfile
+    v-if="teacher && teacher.name"
+    :teacher="teacher"
+    :lang="page.lang"
+    :translation-link="translationLink"
+  />
   <div v-else class="tp-not-found">
     <h1>未找到该教师信息</h1>
     <p>请检查链接是否正确，或返回师资队伍首页查看。</p>
@@ -15,6 +20,7 @@ import type { Teacher } from "../../data/teachers";
 
 const page = usePageData();
 const frontmatter = computed(() => page.value?.frontmatter || {});
+const translationLink = computed(() => String(frontmatter.value.translationLink || ""));
 
 onMounted(() => {
   // 移除内容区宽度限制

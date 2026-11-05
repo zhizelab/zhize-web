@@ -146,7 +146,7 @@ export default hopeTheme({
   plugins: {
     // 已移除关于实验室的 /demo/ 根页面，保留成果展示和资源库子页面
     catalog: {
-      exclude: [/^\/demo\/$/],
+      exclude: [/^\/demo\/$/, /^\/en\/(?:teachers\/)?$/],
     },
 
     // 注意: 仅用于测试! 你必须自行生成并在生产环境中使用自己的评论服务

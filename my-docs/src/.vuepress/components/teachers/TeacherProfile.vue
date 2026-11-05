@@ -7,6 +7,15 @@
           <img :class="{ 'tp-photo--compact': teacher.id === 'shipengfei' }" :src="teacher.photo" :alt="teacher.name" decoding="async" />
         </div>
         <div class="tp-hero-info">
+          <RouterLink
+            v-if="translationLink"
+            :to="translationLink"
+            :lang="isEnglish ? 'zh-CN' : 'en-US'"
+            :hreflang="isEnglish ? 'zh-CN' : 'en-US'"
+            class="tp-language-link"
+          >
+            {{ isEnglish ? "中文" : "English" }}
+          </RouterLink>
           <h1 class="tp-hero-name">{{ teacher.name }}</h1>
           <p class="tp-hero-title">{{ teacher.title }}</p>
           <p class="tp-hero-role">{{ teacher.role }}</p>
@@ -25,7 +34,7 @@
       <!-- 左侧：核心信息 -->
       <aside class="tp-sidebar">
         <div class="tp-sidebar-card">
-          <h3>联系方式</h3>
+          <h3>{{ labels.contact }}</h3>
           <ul class="tp-contact-list">
             <li v-if="teacher.email">
               <span class="tp-contact-icon">✉</span>
@@ -39,14 +48,14 @@
         </div>
 
         <div class="tp-sidebar-card">
-          <h3>教育背景</h3>
+          <h3>{{ labels.education }}</h3>
           <ul class="tp-edu-list">
             <li v-for="(edu, idx) in teacher.education" :key="idx">{{ edu }}</li>
           </ul>
         </div>
 
         <div class="tp-sidebar-card" v-if="teacher.courses && teacher.courses.length">
-          <h3>主讲课程</h3>
+          <h3>{{ labels.courses }}</h3>
           <ul class="tp-course-list">
             <li v-for="(course, idx) in teacher.courses" :key="idx">{{ course }}</li>
           </ul>
@@ -56,12 +65,12 @@
       <!-- 右侧：详细介绍 -->
       <main class="tp-main">
         <section class="tp-section">
-          <h2>个人简介</h2>
+          <h2>{{ labels.bio }}</h2>
           <div class="tp-bio" v-html="formattedBio"></div>
         </section>
 
         <section class="tp-section" v-if="teacher.achievements && teacher.achievements.length">
-          <h2>主要成就</h2>
+          <h2>{{ labels.achievements }}</h2>
           <ul class="tp-achievement-list">
             <li v-for="(item, idx) in teacher.achievements" :key="idx">
               <span class="tp-achievement-mark">★</span>
@@ -71,21 +80,21 @@
         </section>
 
         <section class="tp-section" v-if="teacher.projects && teacher.projects.length">
-          <h2>科研项目</h2>
+          <h2>{{ labels.projects }}</h2>
           <ul class="tp-project-list">
             <li v-for="(item, idx) in teacher.projects" :key="idx">{{ item }}</li>
           </ul>
         </section>
 
         <section class="tp-section" v-if="teacher.publications && teacher.publications.length">
-          <h2>代表论文</h2>
+          <h2>{{ labels.publications }}</h2>
           <ol class="tp-pub-list">
             <li v-for="(item, idx) in teacher.publications" :key="idx">{{ item }}</li>
           </ol>
         </section>
 
         <section class="tp-section" v-if="teacher.awards && teacher.awards.length">
-          <h2>获奖情况</h2>
+          <h2>{{ labels.awards }}</h2>
           <ul class="tp-award-list">
             <li v-for="(item, idx) in teacher.awards" :key="idx">
               <span class="tp-award-icon">🏆</span>
@@ -95,7 +104,7 @@
         </section>
 
         <section class="tp-section" v-if="teacher.students">
-          <h2>指导学生</h2>
+          <h2>{{ labels.students }}</h2>
           <p class="tp-students">{{ teacher.students }}</p>
         </section>
 
@@ -104,7 +113,7 @@
 
     <!-- 返回按钮 -->
     <div class="tp-back">
-      <a href="/portfolio.html" class="tp-back-btn">← 返回师资队伍</a>
+      <a href="/portfolio.html" class="tp-back-btn">← {{ labels.back }}</a>
     </div>
   </div>
 </template>
@@ -115,7 +124,34 @@ import type { Teacher } from "../../data/teachers";
 
 const props = defineProps<{
   teacher: Teacher;
+  lang: string;
+  translationLink: string;
 }>();
+
+const isEnglish = computed(() => props.lang === "en-US");
+const labels = computed(() => isEnglish.value ? {
+  contact: "Contact",
+  education: "Education",
+  courses: "Courses",
+  bio: "Biography",
+  achievements: "Selected Achievements",
+  projects: "Research Projects",
+  publications: "Selected Publications",
+  awards: "Awards",
+  students: "Student Supervision",
+  back: "Back to Faculty",
+} : {
+  contact: "联系方式",
+  education: "教育背景",
+  courses: "主讲课程",
+  bio: "个人简介",
+  achievements: "主要成就",
+  projects: "科研项目",
+  publications: "代表论文",
+  awards: "获奖情况",
+  students: "指导学生",
+  back: "返回师资队伍",
+});
 
 const formattedBio = computed(() => {
   return props.teacher.bio
@@ -174,6 +210,16 @@ const formattedBio = computed(() => {
   flex-direction: column;
   gap: 8px;
   padding-top: 8px;
+}
+
+.tp-language-link {
+  align-self: flex-end;
+  padding: 5px 14px;
+  border: 1px solid currentColor;
+  border-radius: 20px;
+  color: #8f3b28;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .tp-hero-name {

@@ -16,7 +16,7 @@ shortBio: 主要从事仿生物视觉的目标检测理论及应用、智能视�
 researchAreas:
   - 仿生物视觉的目标检测理论及应用
   - 智能视觉物联网理论与应用
-email: Zhangz@hhuc.edu.cn
+email: 20011573@hhu.edu.cn
 office: 人工智能与自动化学院 215 室
 education:
   - 硕士，通信与信息系统，河海大学，2005年
@@ -49,6 +49,7 @@ awards:
   - 指导学生获江苏省大学生电子设计竞赛二等奖
 students: （待补充）
 link: /teachers/zhangzhuo.html
+translationLink: /en/teachers/zhangzhuo.html
 ---
 
 <TeacherProfileLoader />
