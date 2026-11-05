@@ -16,7 +16,8 @@ researchAreas:
   - Theory and applications of biologically inspired visual object detection
   - Theory and applications of the intelligent visual Internet of Things
 email: 20011573@hhu.edu.cn
-office: Room 215, College of Artificial Intelligence and Automation
+office: College of Artificial Intelligence and Automation, Hohai University
+showOfficeInHero: true
 education:
   - Master's degree in Communication and Information Systems, Hohai University, 2005
   - Bachelor's degree in Information Engineering, Hohai University, 2001

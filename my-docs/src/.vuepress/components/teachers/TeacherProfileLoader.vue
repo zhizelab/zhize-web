@@ -4,6 +4,7 @@
     :teacher="teacher"
     :lang="page.lang"
     :translation-link="translationLink"
+    :show-office-in-hero="frontmatter.showOfficeInHero === true"
   />
   <div v-else class="tp-not-found">
     <h1>未找到该教师信息</h1>

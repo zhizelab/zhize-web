@@ -17,7 +17,8 @@ researchAreas:
   - 仿生物视觉的目标检测理论及应用
   - 智能视觉物联网理论与应用
 email: 20011573@hhu.edu.cn
-office: 人工智能与自动化学院 215 室
+office: 河海大学人工智能与自动化学院
+showOfficeInHero: true
 education:
   - 硕士，通信与信息系统，河海大学，2005年
   - 学士，信息工程，河海大学，2001年

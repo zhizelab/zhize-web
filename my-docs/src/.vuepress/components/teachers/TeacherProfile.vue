@@ -19,6 +19,10 @@
           <h1 class="tp-hero-name">{{ teacher.name }}</h1>
           <p class="tp-hero-title">{{ teacher.title }}</p>
           <p class="tp-hero-role">{{ teacher.role }}</p>
+          <p v-if="showOfficeInHero && teacher.office" class="tp-hero-office">
+            <span aria-hidden="true">📍</span>
+            {{ teacher.office }}
+          </p>
           <p class="tp-hero-bio">{{ teacher.shortBio }}</p>
           <div class="tp-hero-areas">
             <span v-for="area in teacher.researchAreas" :key="area" class="tp-area-tag">
@@ -40,7 +44,7 @@
               <span class="tp-contact-icon">✉</span>
               <span>{{ teacher.email }}</span>
             </li>
-            <li v-if="teacher.office">
+            <li v-if="teacher.office && !showOfficeInHero">
               <span class="tp-contact-icon">📍</span>
               <span>{{ teacher.office }}</span>
             </li>
@@ -126,6 +130,7 @@ const props = defineProps<{
   teacher: Teacher;
   lang: string;
   translationLink: string;
+  showOfficeInHero: boolean;
 }>();
 
 const isEnglish = computed(() => props.lang === "en-US");
@@ -240,6 +245,13 @@ const formattedBio = computed(() => {
   font-size: 0.95rem;
   color: #888;
   margin: 0;
+}
+
+.tp-hero-office {
+  margin: 4px 0 0;
+  color: #333;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .tp-hero-bio {
